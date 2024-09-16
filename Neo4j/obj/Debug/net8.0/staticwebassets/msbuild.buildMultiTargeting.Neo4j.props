@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Neo4j.props" />
+</Project>
