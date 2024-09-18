@@ -1,0 +1,149 @@
+// ----------------------------------
+// Tạo user
+// ----------------------------------
+CREATE (u1:User {username: 'alice', password: 'pass123', fullname: 'Alice Smith', email: 'alice@example.com', dob: '1990-05-12', gender: 'female', city: 'New York', hobbies: 'reading, hiking'}),
+       (u2:User {username: 'bob', password: 'pass123', fullname: 'Bob Johnson', email: 'bob@example.com', dob: '1988-02-22', gender: 'male', city: 'Los Angeles', hobbies: 'gaming, hiking'}),
+       (u3:User {username: 'charlie', password: 'pass123', fullname: 'Charlie Brown', email: 'charlie@example.com', dob: '1992-11-15', gender: 'male', city: 'Chicago', hobbies: 'coding, swimming'}),
+       (u4:User {username: 'diana', password: 'pass123', fullname: 'Diana Prince', email: 'diana@example.com', dob: '1995-08-08', gender: 'female', city: 'New York', hobbies: 'photography, dancing'}),
+       (u5:User {username: 'eva', password: 'pass123', fullname: 'Eva Green', email: 'eva@example.com', dob: '1993-03-09', gender: 'female', city: 'San Francisco', hobbies: 'painting, gaming'}),
+       (u6:User {username: 'frank', password: 'pass123', fullname: 'Frank Castle', email: 'frank@example.com', dob: '1987-10-10', gender: 'male', city: 'Miami', hobbies: 'martial arts, gaming'}),
+       (u7:User {username: 'george', password: 'pass123', fullname: 'George Miller', email: 'george@example.com', dob: '1994-06-18', gender: 'male', city: 'Chicago', hobbies: 'reading, biking'}),
+       (u8:User {username: 'harry', password: 'pass123', fullname: 'Harry Potter', email: 'harry@example.com', dob: '1990-07-31', gender: 'male', city: 'London', hobbies: 'magic, chess'}),
+       (u9:User {username: 'isabella', password: 'pass123', fullname: 'Isabella Swan', email: 'isabella@example.com', dob: '1996-01-13', gender: 'female', city: 'Seattle', hobbies: 'reading, hiking'}),
+       (u10:User {username: 'jack', password: 'pass123', fullname: 'Jack Sparrow', email: 'jack@example.com', dob: '1985-04-01', gender: 'male', city: 'Caribbean', hobbies: 'sailing, adventure'})
+RETURN u1, u2, u3, u4, u5, u6, u7, u8, u9, u10;
+
+// ----------------------------------
+// Tạo relationship follows
+// ----------------------------------
+MATCH (u1:User {username: 'alice'}), (u2:User {username: 'bob'}), (u3:User {username: 'charlie'}), (u4:User {username: 'diana'})
+CREATE (u1)-[:follows {status: 'pending'}]->(u2),
+       (u2)-[:follows {status: 'pending'}]->(u3),
+       (u3)-[:follows {status: 'pending'}]->(u4),
+       (u4)-[:follows {status: 'pending'}]->(u1)
+RETURN u1, u2, u3, u4;
+
+// -----------------------------------------------------
+// Chấp nhận yêu cầu follows và chuyển thành friend_with
+// -----------------------------------------------------
+MATCH (u1:User)-[f:follows {status: 'pending'}]->(u2:User)
+SET f.status = 'accepted'
+CREATE (u1)-[:friend_with {since: date()}]->(u2),
+       (u2)-[:friend_with {since: date()}]->(u1)
+DELETE f
+RETURN u1, u2;
+
+// ----------------------------------
+// Tạo relationship close_friend
+// ----------------------------------
+MATCH (u1:User {username: 'alice'}), (u2:User {username: 'diana'})
+MATCH (u1)-[:friend_with]-(u2)  // Kiểm tra mối quan hệ friend_with
+CREATE (u1)-[:request_close_friend {status: 'pending'}]->(u2)
+RETURN u1, u2;
+
+MATCH (u1:User)-[r:request_close_friend {status: 'pending'}]->(u2:User)
+SET r.status = 'accepted'
+CREATE (u1)-[:close_friend {since: date()}]->(u2),
+       (u2)-[:close_friend {since: date()}]->(u1)
+DELETE r
+RETURN u1, u2;
+
+// ----------------------------------
+// Tạo relationship family_with
+// ----------------------------------
+MATCH (u1:User {username: 'bob'}), (u2:User {username: 'charlie'})
+MATCH (u1)-[:friend_with]-(u2)  // Kiểm tra mối quan hệ friend_with
+CREATE (u1)-[:request_family_with {status: 'pending'}]->(u2)
+RETURN u1, u2;
+
+MATCH (u1:User)-[r:request_family_with {status: 'pending'}]->(u2:User)
+SET r.status = 'accepted'
+CREATE (u1)-[:family_with {since: date()}]->(u2),
+       (u2)-[:family_with {since: date()}]->(u1)
+DELETE r
+RETURN u1, u2;
+
+// ----------------------------------
+// Tạo relationship restricted
+// ----------------------------------
+MATCH (u1:User {username: 'jack'}), (u2:User {username: 'frank'})
+CREATE (u1)-[:restricted]->(u2)
+RETURN u1, u2;
+
+// ----------------------------------
+// Unfriend
+// ----------------------------------
+MATCH (u1:User {username: 'bob'})-[f]-(u2:User {username: 'charlie'})
+DELETE f
+RETURN u1, u2;
+
+// ----------------------------------
+// Đăng ký tài khoản mới
+// ----------------------------------
+CREATE (u:User {username: 'new_user', password: 'pass123', fullname: 'New User', email: 'newuser@example.com', dob: '1995-01-01', gender: 'female', city: 'Los Angeles', hobbies: 'coding, dancing'})
+RETURN u;
+
+// -----------------------------------------------------
+// Kiểm tra thông tin đăng nhập với username và password
+// -----------------------------------------------------
+MATCH (u:User {username: 'alice', password: 'pass123'})
+RETURN u;
+
+// -----------------------------------------------------
+// Kiểm tra thông tin đăng nhập với email và password
+// -----------------------------------------------------
+MATCH (u:User {email: 'bob@example.com', password: 'pass123'})
+RETURN u;
+
+// ----------------------------------
+// Update profile
+// ----------------------------------
+MATCH (u:User {username: 'eva'})
+SET u.city = 'San Francisco', u.hobbies = 'photography, coding', u.fullname = 'Eva Blue'
+RETURN u;
+
+// ----------------------------------
+// Xóa tài khoản
+// ----------------------------------
+MATCH (u:User {username: 'harry'})
+DETACH DELETE u;
+
+// ----------------------------------
+// Đổi mật khẩu
+// ----------------------------------
+MATCH (u:User {username: 'jack'})
+SET u.password = 'newpass123'
+RETURN u;
+
+// ----------------------------------
+// Tìm bạn chung
+// ----------------------------------
+MATCH (u1:User {username: 'alice'})-[:friend_with]-(mutualFriend)-[:friend_with]-(u2:User {username: 'charlie'})
+RETURN mutualFriend;
+
+// ----------------------------------
+// Liệt kê danh sách bạn bè
+// ----------------------------------
+MATCH (u:User {username: 'charlie'})-[:friend_with]->(friends)
+RETURN friends;
+
+// ----------------------------------
+// Tìm kiếm theo tên
+// ----------------------------------
+MATCH (u:User)
+WHERE u.fullname CONTAINS 'Diana'
+RETURN u;
+
+// ----------------------------------
+// Tìm kiếm theo thành phố
+// ----------------------------------
+MATCH (u:User)
+WHERE u.city = 'New York'
+RETURN u;
+
+// -----------------------------------
+// Tìm kiếm theo sở thích và thành phố
+// -----------------------------------
+MATCH (u:User)
+WHERE u.hobbies CONTAINS 'coding' AND u.city = 'Los Angeles'
+RETURN u;
