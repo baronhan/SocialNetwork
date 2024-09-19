@@ -1,0 +1,17 @@
+# Loại trừ thư mục .vs (Visual Studio)
+.vs/
+
+# Loại trừ các file tạm thời
+*.tmp
+*.log
+
+# Loại trừ các thư mục bin và obj (kết quả build)
+bin/
+obj/
+
+# Loại trừ thư mục debug và release
+Debug/
+Release/
+
+# Loại trừ các tệp môi trường của hệ điều hành
+Thumbs.db   # Windows
