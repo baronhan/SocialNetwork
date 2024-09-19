@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Neo4j.ViewModels.RegisterVM
+
+@{
 
     ViewData["Title"] = "Register";
 
@@ -70,16 +72,47 @@
                             <form class="mt-4" method="post" action="/SignUp/Register">
                                 <div class="form-group">
                                     <label class="form-label" for="name">Your Full Name</label>
-                                    <input type="text" class="form-control mb-0" id="name" name="name" placeholder="Your Full Name" required>
+                                    <input type="text" class="form-control mb-0" id="name" asp-for="Name" placeholder="Your Full Name" required>
+                                    <span asp-validation-for="Name" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="email">Email address</label>
-                                    <input type="email" class="form-control mb-0" id="email" name="email" placeholder="Enter email" required>
+                                    <input type="email" class="form-control mb-0" id="email" asp-for="Email" placeholder="Enter email" required>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="password">Password</label>
-                                    <input type="password" class="form-control mb-0" id="password" name="password" placeholder="Password" required>
+                                    <input type="password" class="form-control mb-0" id="password" asp-for="Password" placeholder="Password" required>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
+
+                                <!-- Ngày sinh -->
+                                <div class="form-group">
+                                    <label class="form-label" for="dob">Date of Birth</label>
+                                    <input type="date" class="form-control mb-0" id="dob" asp-for="DateOfBirth" required>
+                                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                </div>
+
+                                <!-- Chọn Giới Tính -->
+                                <div class="form-group">
+                                    <label class="form-label">Gender</label>
+                                    <div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" asp-for="Gender" id="male" value="Male" required>
+                                            <label class="form-check-label" for="male">Male</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" asp-for="Gender" id="female" value="Female" required>
+                                            <label class="form-check-label" for="female">Female</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" asp-for="Gender" id="other" value="Other" required>
+                                            <label class="form-check-label" for="other">Other</label>
+                                        </div>
+                                    </div>
+                                    <span asp-validation-for="Gender" class="text-danger"></span>
+                                </div>
+
                                 <div class="d-inline-block w-100">
                                     <div class="form-check d-inline-block mt-2 pt-1">
                                         <input type="checkbox" class="form-check-input" id="customCheck1" name="terms" required>
@@ -88,6 +121,7 @@
                                     <button type="submit" class="btn btn-primary float-end">Sign Up</button>
                                 </div>
                             </form>
+
 
                         </div>
                     </div>
@@ -111,6 +145,5 @@
     <script src="../assets/js/app.js"></script>
     <script src="../vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
     <script src="../assets/js/lottie.js"></script>
-
 </body>
 </html>

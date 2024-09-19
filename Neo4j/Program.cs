@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyMVCApp.Services;
+using Neo4j.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,8 @@ builder.Services.AddSingleton<Neo4jService>(provider =>
     var password = configuration["Neo4j:Password"];
     return new Neo4jService(uri, username, password);
 });
+
+builder.Services.AddScoped<UserService>();
 
 // Đăng ký IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();

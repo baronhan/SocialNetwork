@@ -309,9 +309,9 @@
                         </div>
                     </div>
                     <div class="iq-search-bar device-search">
-                        <form action="#" class="searchbox">
+                        <form action="/Search/Index" method="get" class="searchbox">
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
-                            <input type="text" class="text search-input" placeholder="Search here...">
+                            <input type="text" name="searchTerm" class="text search-input" placeholder="Search here...">
                         </form>
                     </div>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -747,7 +747,9 @@
             </div>
         </div>
 
-        @RenderBody()
+        <main>
+            @RenderBody()
+        </main>
 
         <footer class="iq-footer bg-white">
             <div class="container-fluid">
