@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Neo4j.ViewModels.SearchVM>
+
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<div id="content-page" class="content-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card-body">
+                    <h2>Friends</h2>
+                    <div class="friend-list-tab mt-2">
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="all-friends" role="tabpanel">
+                                <div class="card-body p-0">
+                                    <div class="row">
+                                        @foreach(var user in Model)
+                                        {
+                                            <div class="col-md-6 col-lg-6 mb-3">
+                                                <div class="iq-friendlist-block">
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <a href="#">
+                                                                <img src="../assets/images/user/05.jpg" alt="@user.Name" class="img-fluid">
+                                                            </a>
+                                                            <div class="friend-info ms-3">
+                                                                <h5>@user.Name</h5>
+                                                                <p class="mb-0">City: @user.City</p>
+                                                                <p class="mb-0">Followers: @user.FollowersCount</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-header-toolbar d-flex align-items-center">
+                                                            <span class="dropdown-toggle btn btn-secondary me-2"  aria-expanded="true" role="button">
+                                                                Add Friend
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }                  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

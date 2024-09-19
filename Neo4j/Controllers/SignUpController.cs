@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using MyMVCApp.Services;
+using Neo4j.Services;
+using Neo4j.ViewModels;
 
 namespace Neo4j.Controllers
 {
@@ -19,18 +22,28 @@ namespace Neo4j.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(string name, string email, string password)
+        public async Task<IActionResult> Register(RegisterVM model)
         {
             if(ModelState.IsValid)
             {
-                //Gọi dịch vụ Neo4j để tạo người dùng
-                await _neo4jService.CreateUserAsync(name, email, password);
+                if(await _neo4jService.EmailExistsAsync(model.Email)) 
+                {
+                    ModelState.AddModelError("Email", "Email đã tồn tại. Vui lòng sử dụng một email khác.");
+                }
+                else
+                {
+                    var userService = new UserService();
+                    string pass = userService.RegisterUser(model.Password);
 
-                //Lưu thông tin đăng nhập vào session
-                HttpContext.Session.SetString("username",  name);
+                    //Gọi dịch vụ Neo4j để tạo người dùng
+                    await _neo4jService.CreateUserAsync(model.Name, model.Email, pass, model.DateOfBirth, model.Gender);
 
-                //Điều hướng về trang Home
-                return RedirectToAction("Index", "Home");
+                    //Lưu thông tin đăng nhập vào session
+                    HttpContext.Session.SetString("username", model.Name);
+
+                    //Điều hướng về trang Home
+                    return RedirectToAction("Index", "Home");
+                }    
             }    
 
             return View();
