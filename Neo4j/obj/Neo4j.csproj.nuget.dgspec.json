@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Neo4j.csproj": {}
+    "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Neo4j.csproj": {}
   },
   "projects": {
-    "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Neo4j.csproj": {
+    "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Neo4j.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Neo4j.csproj",
+        "projectUniqueName": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Neo4j.csproj",
         "projectName": "Neo4j",
-        "projectPath": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Neo4j.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\obj\\",
+        "projectPath": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Neo4j.csproj",
+        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
+        "outputPath": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -49,10 +53,6 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.0.3, )"
-            },
-            "Microsoft.CodeAnalysis.Scripting.Common": {
-              "target": "Package",
-              "version": "[4.8.0, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
