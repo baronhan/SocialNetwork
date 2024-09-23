@@ -35,13 +35,13 @@ namespace Neo4j.Controllers
                     var userService = new UserService();
                     string pass = userService.RegisterUser(model.Password);
 
-                    //Gọi dịch vụ Neo4j để tạo người dùng
+                    
                     await _neo4jService.CreateUserAsync(model.Name, model.Email, pass, model.DateOfBirth, model.Gender);
 
-                    //Lưu thông tin đăng nhập vào session
+                    
                     HttpContext.Session.SetString("username", model.Name);
 
-                    //Điều hướng về trang Home
+                    
                     return RedirectToAction("Index", "Home");
                 }    
             }    

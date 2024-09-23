@@ -16,7 +16,6 @@ namespace MyMVCApp.Services
             _driver = GraphDatabase.Driver(uri, AuthTokens.Basic(username, password));
         }
 
-        // Hàm tạo user
         public async Task CreateUserAsync(string username, string email, string password, DateOnly dob, string gender)
         {
             var session = _driver.AsyncSession();
@@ -74,9 +73,9 @@ namespace MyMVCApp.Services
                     var user = new SearchVM
                     {
                         ID = userNode.Id,
-                        Name = username?.ToString(), // Sử dụng giá trị mặc định nếu không có
-                        City = city?.ToString(), // Sử dụng giá trị mặc định nếu không có
-                        FollowersCount = followersCount // Thêm thuộc tính số người theo dõi
+                        Name = username?.ToString(), 
+                        City = city?.ToString(), 
+                        FollowersCount = followersCount 
                     };
 
                     users.Add(user);

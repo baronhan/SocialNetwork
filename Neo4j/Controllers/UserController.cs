@@ -12,18 +12,60 @@ namespace Neo4j.Controllers
             _neo4jService = neo4jService;
         }
 
-        //public async Task<IActionResult> CreateUser(string username)
-        //{
-        //    await _neo4jService.ConnectAsync();
-        //    await _neo4jService.CreateUserAsync(username);
-        //    return View("UserCreated", username);
-        //}
+        public IActionResult Profile()
+        {
+            var username = HttpContext.Session.GetString("username");
 
-        //public async Task<IActionResult> AddFriend(string userA, string userB)
-        //{
-        //    await _neo4jService.ConnectAsync();
-        //    await _neo4jService.CreateFriendshipAsync(userA, userB);
-        //    return View("FriendAdded", new { userA, userB });
-        //}
+            if (username != null)
+            {
+                ViewBag.Username = username;
+            }
+            else
+            {
+                return RedirectToAction("SignIn", "SignUp");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult PersonalInformation()
+        {
+            var username = HttpContext.Session.GetString("username");
+
+            if (username != null)
+            {
+                ViewBag.Username = username;
+            }
+            else
+            {
+                return RedirectToAction("SignIn", "SignUp");
+            }
+
+            return View();
+        }
+        
+        public IActionResult EditProfile()
+        {
+            var username = HttpContext.Session.GetString("username");
+
+            if (username != null)
+            {
+                ViewBag.Username = username;
+            }
+            else
+            {
+                return RedirectToAction("SignIn", "SignUp");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UpdatePersonalInformation()
+        {
+            var username = HttpContext.Session.GetString("username");
+            return View();
+        }
     }
 }
