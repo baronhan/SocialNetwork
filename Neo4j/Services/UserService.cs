@@ -11,5 +11,10 @@ namespace Neo4j.Services
 
             return hashedPassword;
         }
+
+        public bool VerifyPassword(string enteredPassword, string storedHashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHashedPassword);
+        }
     }
 }

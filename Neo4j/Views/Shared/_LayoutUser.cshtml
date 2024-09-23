@@ -576,7 +576,10 @@
                                     <div class="card shadow-none m-0">
                                         <div class="card-header  bg-primary">
                                             <div class="header-title">
-                                                <h5 class="mb-0 text-white">Hello Bni Cyst</h5>
+                                                @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("username")))
+                                                {
+                                                    <h5 class="mb-0 text-white">Hello @HttpContextAccessor.HttpContext.Session.GetString("username")</h5>
+                                                }
                                                 <span class="text-white font-size-12">Available</span>
                                             </div>
                                         </div>
@@ -628,9 +631,8 @@
                                                 </div>
                                             </a>
                                             <div class="d-inline-block w-100 text-center p-3">
-                                                <a class="btn btn-primary iq-sign-btn" href="../dashboard/sign-in.html" role="button">
-                                                    Sign
-                                                    out<i class="ri-login-box-line ms-2"></i>
+                                                <a class="btn btn-primary iq-sign-btn" href="@Url.Action("Logout", "SignUp")" role="button">
+                                                    Sign out<i class="ri-login-box-line ms-2"></i>
                                                 </a>
                                             </div>
                                         </div>

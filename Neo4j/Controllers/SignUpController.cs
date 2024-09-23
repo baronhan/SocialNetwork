@@ -48,5 +48,56 @@ namespace Neo4j.Controllers
 
             return View();
         }
+
+        [HttpGet]
+        public IActionResult SignIn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SignInVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (!await _neo4jService.EmailExistsAsync(model.Email))
+            {
+                ModelState.AddModelError("", "Invalid email or password.");
+                return View(model);
+            }
+
+            string enteredPassword = model.Password;
+
+            string? storedHashedPassword = await _neo4jService.GetHashedPassword(model.Email);
+
+            if (storedHashedPassword != null)
+            {
+                var userService = new UserService();
+                bool isPasswordCorrect = userService.VerifyPassword(enteredPassword, storedHashedPassword);
+
+                if (!isPasswordCorrect)
+                {
+                    ModelState.AddModelError("", "Invalid email or password.");
+                    return View(model);
+                }
+
+                HttpContext.Session.SetString("email", model.Email);
+                string username = await _neo4jService.GetUserName(model.Email);
+                HttpContext.Session.SetString("username", username);
+
+                return RedirectToAction("Index", "Home");
+            }
+            return View(model);
+        }
+
+
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("SignIn", "SignUp");
+        }
     }
 }

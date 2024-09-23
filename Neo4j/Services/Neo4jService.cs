@@ -95,6 +95,44 @@ namespace MyMVCApp.Services
 
             return users;
         }
-        
+
+        public async Task<string?> GetHashedPassword(string email)
+        {
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync("MATCH (u:User {email: $email}) RETURN u.password AS password", new { email });
+
+                if (await result.FetchAsync())
+                {
+                    return result.Current["password"].As<string>();
+                }
+                return null;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<string> GetUserName(string email)
+        {
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync("MATCH (u:User {email: $email}) RETURN u.username AS username", new { email });
+
+                if (await result.FetchAsync())
+                {
+                    return result.Current["username"].As<string>();
+                }
+                return null;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
     }
 }
