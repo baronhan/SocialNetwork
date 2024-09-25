@@ -3,28 +3,44 @@
   "WorkspaceRootPath": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\shared\\components\\updatepassword\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\shared\\components\\updatepassword\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\user\\editprofile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\user\\editprofile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\shared\\components\\updatepersonalinformation\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\shared\\components\\updatepersonalinformation\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\models\\viewcomponents\\updatepersonalinformationviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\models\\viewcomponents\\updatepersonalinformationviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\viewmodels\\updatepersonalinformationvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\viewmodels\\updatepersonalinformationvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\shared\\_layoutuser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\shared\\_layoutuser.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\models\\viewcomponents\\managecontactviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\models\\viewcomponents\\managecontactviewcomponent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\services\\neo4jservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\services\\neo4jservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\shared\\components\\managecontact\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\shared\\components\\managecontact\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\viewmodels\\updatepasswordvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\viewmodels\\updatepasswordvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\user\\editprofile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\user\\editprofile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\user\\managecontact.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\user\\managecontact.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,84 +50,136 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "EditProfile.cshtml",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\User\\EditProfile.cshtml",
-              "RelativeDocumentMoniker": "Neo4j\\Views\\User\\EditProfile.cshtml",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\User\\EditProfile.cshtml",
-              "RelativeToolTip": "Neo4j\\Views\\User\\EditProfile.cshtml",
-              "ViewState": "AgIAADkAAAAAAAAAAAAAAEEAAAAeAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-25T09:12:16.295Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "UpdatePasswordVM.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\UpdatePasswordVM.cs",
-              "RelativeDocumentMoniker": "Neo4j\\ViewModels\\UpdatePasswordVM.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\UpdatePasswordVM.cs",
-              "RelativeToolTip": "Neo4j\\ViewModels\\UpdatePasswordVM.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-25T09:05:27.279Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\UserService.cs",
-              "RelativeDocumentMoniker": "Neo4j\\Services\\UserService.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\UserService.cs",
-              "RelativeToolTip": "Neo4j\\Services\\UserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-25T08:38:12.866Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Neo4jService.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
-              "RelativeDocumentMoniker": "Neo4j\\Services\\Neo4jService.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
-              "RelativeToolTip": "Neo4j\\Services\\Neo4jService.cs",
-              "ViewState": "AgIAALgAAAAAAAAAAAAEwG8AAAANAAAAAAAAAA==",
+              "Title": "UpdatePersonalInformationViewComponent.cs",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Models\\ViewComponents\\UpdatePersonalInformationViewComponent.cs",
+              "RelativeDocumentMoniker": "Neo4j\\Models\\ViewComponents\\UpdatePersonalInformationViewComponent.cs",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Models\\ViewComponents\\UpdatePersonalInformationViewComponent.cs",
+              "RelativeToolTip": "Neo4j\\Models\\ViewComponents\\UpdatePersonalInformationViewComponent.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAAwBIAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-25T08:37:18.909Z",
+              "WhenOpened": "2024-09-25T16:13:08.118Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "Neo4j\\Controllers\\UserController.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\UserController.cs",
-              "RelativeToolTip": "Neo4j\\Controllers\\UserController.cs",
-              "ViewState": "AgIAAGcAAAAAAAAAAAArwHQAAAAnAAAAAAAAAA==",
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\UpdatePersonalInformation\\Default.cshtml",
+              "RelativeDocumentMoniker": "Neo4j\\Views\\Shared\\Components\\UpdatePersonalInformation\\Default.cshtml",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\UpdatePersonalInformation\\Default.cshtml",
+              "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\UpdatePersonalInformation\\Default.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T16:12:44.29Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UpdatePersonalInformationVM.cs",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\UpdatePersonalInformationVM.cs",
+              "RelativeDocumentMoniker": "Neo4j\\ViewModels\\UpdatePersonalInformationVM.cs",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\UpdatePersonalInformationVM.cs",
+              "RelativeToolTip": "Neo4j\\ViewModels\\UpdatePersonalInformationVM.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-09-25T08:33:45.888Z",
+              "WhenOpened": "2024-09-25T16:12:34.91Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "_LayoutUser.cshtml",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\_LayoutUser.cshtml",
+              "RelativeDocumentMoniker": "Neo4j\\Views\\Shared\\_LayoutUser.cshtml",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\_LayoutUser.cshtml",
+              "RelativeToolTip": "Neo4j\\Views\\Shared\\_LayoutUser.cshtml",
+              "ViewState": "AgIAAFUCAAAAAAAAAAAAAHACAABXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T16:00:01.353Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Default.cshtml",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\UpdatePassword\\Default.cshtml",
-              "RelativeDocumentMoniker": "Neo4j\\Views\\Shared\\Components\\UpdatePassword\\Default.cshtml",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\UpdatePassword\\Default.cshtml",
-              "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\UpdatePassword\\Default.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAoAAAAAAAAAA==",
+              "Title": "EditProfile.cshtml",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\User\\EditProfile.cshtml",
+              "RelativeDocumentMoniker": "Neo4j\\Views\\User\\EditProfile.cshtml",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\User\\EditProfile.cshtml",
+              "RelativeToolTip": "Neo4j\\Views\\User\\EditProfile.cshtml",
+              "ViewState": "AgIAACcAAAAAAAAAAAAAAC4AAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-09-25T08:32:53.089Z",
+              "WhenOpened": "2024-09-25T15:51:33.327Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "Neo4j\\Controllers\\UserController.cs",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\UserController.cs",
+              "RelativeToolTip": "Neo4j\\Controllers\\UserController.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAYwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-25T15:45:17.166Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ManageContact.cshtml",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\User\\ManageContact.cshtml",
+              "RelativeDocumentMoniker": "Neo4j\\Views\\User\\ManageContact.cshtml",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\User\\ManageContact.cshtml",
+              "RelativeToolTip": "Neo4j\\Views\\User\\ManageContact.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T15:44:18.903Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\ManageContact\\Default.cshtml",
+              "RelativeDocumentMoniker": "Neo4j\\Views\\Shared\\Components\\ManageContact\\Default.cshtml",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\ManageContact\\Default.cshtml",
+              "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\ManageContact\\Default.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAABjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-25T15:39:06.082Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Neo4jService.cs",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
+              "RelativeDocumentMoniker": "Neo4j\\Services\\Neo4jService.cs",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
+              "RelativeToolTip": "Neo4j\\Services\\Neo4jService.cs",
+              "ViewState": "AgIAAKIBAAAAAAAAAAAwwMMBAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-25T15:35:29.297Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ManageContactViewComponent.cs",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Models\\ViewComponents\\ManageContactViewComponent.cs",
+              "RelativeDocumentMoniker": "Neo4j\\Models\\ViewComponents\\ManageContactViewComponent.cs",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Models\\ViewComponents\\ManageContactViewComponent.cs",
+              "RelativeToolTip": "Neo4j\\Models\\ViewComponents\\ManageContactViewComponent.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAQwA4AAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-25T15:34:54.857Z",
               "EditorCaption": ""
             }
           ]

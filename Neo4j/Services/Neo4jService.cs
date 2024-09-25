@@ -401,8 +401,62 @@ namespace MyMVCApp.Services
             }
         }
 
+        public async Task<bool> UpdateContactInformationAsync(string id, string phoneNumber, string email)
+        {
+            var session = _driver.AsyncSession();
+            try
+            {
+                return await session.WriteTransactionAsync(async tx =>
+                {
+                    var query = "MATCH (u:User {id: $id}) SET u.mobile = $phoneNumber, u.email = $email RETURN u";
+                    var result = await tx.RunAsync(query, new { id, phoneNumber, email });
 
+                    if(await result.FetchAsync())
+                    {
+                        return true;
+                    }
 
+                    return false;
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<ManageContactVM?> GetContactInformationByIdAsync(string id)
+        {
+            ManageContactVM user = null;
+            var query = @"
+            MATCH (u:User {id: $id})
+            RETURN u.mobile AS PhoneNumber,
+                    u.email AS Email
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                var records = await result.ToListAsync();
+
+                if (records.Count > 0)
+                {
+                    var record = records.First();
+                    user = new ManageContactVM
+                    {
+                        phoneNumber = record["PhoneNumber"].As<string>(),
+                        email = record["Email"].As<string>(),
+                    };
+                }
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return user;
+        }
 
     }
 }
