@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "jgh6vI4azJeazPTxOksyvK/NCev1FAxE7Wgr3q4jvx0=",
+  "Hash": "PAsJVhvR+UmocvdqTzWo8OtRRejXh7JDNIyMOwoFrew=",
   "Source": "Neo4j",
   "BasePath": "_content/Neo4j",
   "Mode": "Default",
@@ -5411,6 +5411,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\images\\user\\4.jpg"
+    },
+    {
+      "Identity": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\wwwroot\\assets\\images\\user\\avatar.jpg",
+      "SourceId": "Neo4j",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\wwwroot\\",
+      "BasePath": "_content/Neo4j",
+      "RelativePath": "assets/images/user/avatar.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\images\\user\\avatar.jpg"
     },
     {
       "Identity": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\wwwroot\\assets\\images\\user\\user-1.jpg",

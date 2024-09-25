@@ -35,11 +35,11 @@ namespace Neo4j.Controllers
                     var userService = new UserService();
                     string pass = userService.RegisterUser(model.Password);
 
-                    
-                    await _neo4jService.CreateUserAsync(model.Name, model.Email, pass, model.DateOfBirth, model.Gender);
 
-                    
-                    HttpContext.Session.SetString("username", model.Name);
+                    string userId = await _neo4jService.CreateUserAsync(model.Name, model.Email, pass, model.DateOfBirth, model.Gender);
+
+
+                    HttpContext.Session.SetString("id", userId);
 
                     
                     return RedirectToAction("Index", "Home");
@@ -70,7 +70,6 @@ namespace Neo4j.Controllers
             }
 
             string enteredPassword = model.Password;
-
             string? storedHashedPassword = await _neo4jService.GetHashedPassword(model.Email);
 
             if (storedHashedPassword != null)
@@ -84,12 +83,18 @@ namespace Neo4j.Controllers
                     return View(model);
                 }
 
+             
                 HttpContext.Session.SetString("email", model.Email);
                 string username = await _neo4jService.GetUserName(model.Email);
                 HttpContext.Session.SetString("username", username);
 
+              
+                string userId = await _neo4jService.GetUserIdByEmailAsync(model.Email);
+                HttpContext.Session.SetString("id", userId);
+
                 return RedirectToAction("Index", "Home");
             }
+
             return View(model);
         }
 

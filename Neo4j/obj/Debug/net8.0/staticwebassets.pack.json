@@ -1133,6 +1133,10 @@
       "PackagePath": "staticwebassets\\assets\\images\\user\\4.jpg"
     },
     {
+      "Id": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\wwwroot\\assets\\images\\user\\avatar.jpg",
+      "PackagePath": "staticwebassets\\assets\\images\\user\\avatar.jpg"
+    },
+    {
       "Id": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\wwwroot\\assets\\images\\user\\user-1.jpg",
       "PackagePath": "staticwebassets\\assets\\images\\user\\user-1.jpg"
     },

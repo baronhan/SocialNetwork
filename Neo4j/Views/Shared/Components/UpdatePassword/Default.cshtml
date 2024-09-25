@@ -1,0 +1,26 @@
+﻿@model Neo4j.ViewModels.UpdatePasswordVM
+
+<form asp-controller="User" asp-action="UpdatePassword" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="currentPassword" class="form-label">Current Password:</label>
+        <a href="#" class="float-end">Forgot Password</a>
+        <input asp-for="currentPassword" type="Password" class="form-control" id="cpass" />
+        <span asp-validation-for="currentPassword" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="newPassword" class="form-label">New Password:</label>
+        <input asp-for="newPassword" type="Password" class="form-control" id="npass" />
+        <span asp-validation-for="newPassword" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="confirmPassword" class="form-label">Verify Password:</label>
+        <input asp-for="confirmPassword" type="Password" class="form-control" id="vpass" />
+        <span asp-validation-for="confirmPassword" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary me-2">Submit</button>
+    <button type="reset" class="btn bg-soft-danger">Cancel</button>
+</form>
