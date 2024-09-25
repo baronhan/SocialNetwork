@@ -142,5 +142,34 @@ namespace Neo4j.Controllers
             return View("EditProfile", model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ManageContact(ManageContactVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = HttpContext.Session.GetString("id");
+
+                if (string.IsNullOrEmpty(id))
+                {
+                    ModelState.AddModelError("", "User session expired or not found.");
+                    return RedirectToAction("SignIn", "SignUp");
+                }
+
+                bool result = await _neo4jService.UpdateContactInformationAsync(id, model.phoneNumber, model.email);
+
+                if (result)
+                {
+                    return RedirectToAction("EditProfile"); 
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Failed to update the contact information. Please try again.");
+                }
+            }
+
+            return View("EditProfile");
+        }
+
+
     }
 }

@@ -1,0 +1,21 @@
+﻿@model Neo4j.ViewModels.ManageContactVM
+
+<form asp-controller="User" asp-action="ManageContact" method="post" enctype="multipart/form-data">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="phoneNumber" class="form-label">Contact Number:</label>
+        <input asp-for="phoneNumber" type="text" class="form-control" value="@Model.phoneNumber" />
+        <span asp-validation-for="phoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="email" class="form-label">Email:</label>
+        <input asp-for="email" type="text" class="form-control" value="@Model.email" />
+        <span asp-validation-for="email" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary me-2">Submit</button>
+    <button type="reset" class="btn bg-soft-danger" onclick="window.location.href='@Url.Action("Profile", "User")'">Cancel</button>
+</form>
