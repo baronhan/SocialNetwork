@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyMVCApp.Services;
 using Neo4j.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -18,7 +20,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-builder.Services.AddSingleton<Neo4jService>(provider =>
+// Register Neo4jService as Scoped
+builder.Services.AddScoped<Neo4jService>(provider =>
 {
     var configuration = builder.Configuration;
     var uri = configuration["Neo4j:Uri"];
@@ -27,15 +30,21 @@ builder.Services.AddSingleton<Neo4jService>(provider =>
     return new Neo4jService(uri, username, password);
 });
 
+builder.Services.AddControllersWithViews();
+
+// Cấu hình kích thước tối đa cho tải lên file
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // Ví dụ: 100MB
+});
+
+// Register UserService
 builder.Services.AddScoped<UserService>();
 
 // Đăng ký IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
-
-// Enable session
-app.UseSession();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -46,11 +55,14 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSession();
+
 app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=SignUp}/{action=SignIn}/{id?}");
 
 app.Run();

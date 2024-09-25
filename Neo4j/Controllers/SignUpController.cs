@@ -35,18 +35,74 @@ namespace Neo4j.Controllers
                     var userService = new UserService();
                     string pass = userService.RegisterUser(model.Password);
 
-                    //Gọi dịch vụ Neo4j để tạo người dùng
-                    await _neo4jService.CreateUserAsync(model.Name, model.Email, pass, model.DateOfBirth, model.Gender);
 
-                    //Lưu thông tin đăng nhập vào session
-                    HttpContext.Session.SetString("username", model.Name);
+                    string userId = await _neo4jService.CreateUserAsync(model.Name, model.Email, pass, model.DateOfBirth, model.Gender);
 
-                    //Điều hướng về trang Home
+
+                    HttpContext.Session.SetString("id", userId);
+
+                    
                     return RedirectToAction("Index", "Home");
                 }    
             }    
 
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult SignIn()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SignInVM model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (!await _neo4jService.EmailExistsAsync(model.Email))
+            {
+                ModelState.AddModelError("", "Invalid email or password.");
+                return View(model);
+            }
+
+            string enteredPassword = model.Password;
+            string? storedHashedPassword = await _neo4jService.GetHashedPassword(model.Email);
+
+            if (storedHashedPassword != null)
+            {
+                var userService = new UserService();
+                bool isPasswordCorrect = userService.VerifyPassword(enteredPassword, storedHashedPassword);
+
+                if (!isPasswordCorrect)
+                {
+                    ModelState.AddModelError("", "Invalid email or password.");
+                    return View(model);
+                }
+
+             
+                HttpContext.Session.SetString("email", model.Email);
+                string username = await _neo4jService.GetUserName(model.Email);
+                HttpContext.Session.SetString("username", username);
+
+              
+                string userId = await _neo4jService.GetUserIdByEmailAsync(model.Email);
+                HttpContext.Session.SetString("id", userId);
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(model);
+        }
+
+
+        public ActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("SignIn", "SignUp");
         }
     }
 }

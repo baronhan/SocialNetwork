@@ -1,4 +1,17 @@
-﻿@inject IHttpContextAccessor HttpContextAccessor
+﻿@using MyMVCApp.Services
+@using Neo4j.ViewModels 
+@inject IHttpContextAccessor HttpContextAccessor
+@inject Neo4jService _neo4jService
+
+@{
+    var userId = HttpContextAccessor.HttpContext?.Session.GetString("id");
+    UpdatePersonalInformationVM user = null; 
+
+    if (!string.IsNullOrEmpty(userId))
+    {
+        user = await _neo4jService.GetPersonalInformationByIdAsync(userId); 
+    }
+}
 
 <!DOCTYPE html>
 
@@ -564,24 +577,40 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a href="#" class="   d-flex align-items-center dropdown-toggle" id="drop-down-arrow" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img src="../assets/images/user/1.jpg" class="img-fluid rounded-circle me-3" alt="user">
+                                    <img src="@(user?.ProfileImage ?? "/assets/images/user/default.jpg")" class="img-fluid rounded-circle me-3" alt="user">
                                     <div class="caption">
-                                        @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Session.GetString("username")))
+                                        @{
+                                            var sessionUsername = @user.Username;
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(sessionUsername))
                                         {
-                                            <h6 class="mb-0 line-height">Hello, @HttpContextAccessor.HttpContext.Session.GetString("username")</h6>
+                                            <h6 class="mb-0 line-height">Hello, @sessionUsername</h6>
+                                        }
+                                        else
+                                        {
+                                            <h6 class="mb-0 line-height">Hello, Guest</h6>
                                         }
                                     </div>
+
                                 </a>
                                 <div class="sub-drop dropdown-menu caption-menu" aria-labelledby="drop-down-arrow">
                                     <div class="card shadow-none m-0">
-                                        <div class="card-header  bg-primary">
+                                        <div class="card-header bg-primary">
                                             <div class="header-title">
-                                                <h5 class="mb-0 text-white">Hello Bni Cyst</h5>
+                                                @if (!string.IsNullOrEmpty(user.Username))
+                                                {
+                                                    <h5 class="mb-0 text-white">Hello @user.Username</h5>
+                                                }
+                                                else
+                                                {
+                                                    <h5 class="mb-0 text-white">Hello Guest</h5>
+                                                }
                                                 <span class="text-white font-size-12">Available</span>
                                             </div>
                                         </div>
                                         <div class="card-body p-0 ">
-                                            <a href="../app/profile.html" class="iq-sub-card iq-bg-primary-hover">
+                                            <a asp-controller="User" asp-action="Profile" class="iq-sub-card iq-bg-primary-hover">
                                                 <div class="d-flex align-items-center">
                                                     <div class="rounded card-icon bg-soft-primary">
                                                         <i class="ri-file-user-line"></i>
@@ -592,7 +621,7 @@
                                                     </div>
                                                 </div>
                                             </a>
-                                            <a href="../app/profile-edit.html" class="iq-sub-card iq-bg-warning-hover">
+                                            <a asp-controller="User" asp-action="EditProfile" class="iq-sub-card iq-bg-warning-hover">
                                                 <div class="d-flex align-items-center">
                                                     <div class="rounded card-icon bg-soft-warning">
                                                         <i class="ri-profile-line"></i>
@@ -628,9 +657,8 @@
                                                 </div>
                                             </a>
                                             <div class="d-inline-block w-100 text-center p-3">
-                                                <a class="btn btn-primary iq-sign-btn" href="../dashboard/sign-in.html" role="button">
-                                                    Sign
-                                                    out<i class="ri-login-box-line ms-2"></i>
+                                                <a class="btn btn-primary iq-sign-btn" href="@Url.Action("Logout", "SignUp")" role="button">
+                                                    Sign out<i class="ri-login-box-line ms-2"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -818,4 +846,6 @@
         </div>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@latest/dist/js/datepicker.min.js"></script>
+
 </html>
