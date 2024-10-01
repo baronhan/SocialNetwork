@@ -14,20 +14,24 @@ namespace Neo4j.Controllers
             _neo4jService = neo4jService;
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            var username = HttpContext.Session.GetString("username");
+            ProfileVM user = null;
 
-            if (username != null)
+            var userId = HttpContext.Session.GetString("id");
+
+            if (userId != null)
             {
-                ViewBag.Username = username;
+                userId = HttpContext.Session.GetString("id");
+
+                user = await _neo4jService.GetProfileByIdAsync(userId);
             }
             else
             {
                 return RedirectToAction("SignIn", "SignUp");
             }
 
-            return View();
+            return View(user);
         }
 
 
@@ -171,5 +175,74 @@ namespace Neo4j.Controllers
         }
 
 
+        public IActionResult AccountSetting()
+        {
+            var id = HttpContext.Session.GetString("id");
+
+            if (id == null)
+            {
+                return RedirectToAction("SignIn", "SignUp");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AccountSetting(AccountSettingVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = HttpContext.Session.GetString("id");
+
+                if (string.IsNullOrEmpty(id))
+                {
+                    ModelState.AddModelError("", "User session expired or not found.");
+                    return RedirectToAction("SignIn", "SignUp");
+                }
+
+                bool result = await _neo4jService.UpdateAccountSettingAsync(id, model.userName, model.email, model.languages);
+
+                if (result)
+                {
+                    TempData["SuccessMessage"] = "Account settings updated successfully!";
+                    return RedirectToAction("AccountSetting");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Failed to update the contact information. Please try again.");
+                }
+            }   
+            
+            return View("AccountSetting");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SocialMedia(SocialMediaVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = HttpContext.Session.GetString("id");
+
+                if (string.IsNullOrEmpty(id))
+                {
+                    ModelState.AddModelError("", "User session expired or not found.");
+                    return RedirectToAction("SignIn", "SignUp");
+                }
+
+                bool result = await _neo4jService.UpdateSocialMediaAsync(id, model.facebookLink, model.googleLink, model.instagramLink, model.twitterLink, model.youtubeLink);
+
+                if (result)
+                {
+                    TempData["SuccessMessage"] = "Social Media updated successfully!";
+                    return RedirectToAction("AccountSetting");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Failed to update the contact information. Please try again.");
+                }
+            }
+
+            return View("AccountSetting");
+        }
     }
 }

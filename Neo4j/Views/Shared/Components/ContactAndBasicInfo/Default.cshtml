@@ -1,0 +1,67 @@
+﻿@model Neo4j.ViewModels.ContactInformationVM
+
+<div class="tab-pane fade active show" id="v-pills-basicinfo-tab" role="tabpanel" aria-labelledby="v-pills-basicinfo-tab">
+    <h4>Contact Information</h4>
+    <hr>
+    <div class="row">
+        <div class="col-3">
+            <h6>Email</h6>
+        </div>
+        <div class="col-9">
+            <p class="mb-0">@Model.email</p>
+        </div>
+        <div class="col-3">
+            <h6>Mobile</h6>
+        </div>
+        <div class="col-9">
+            <p class="mb-0">@Model.mobile</p>
+        </div>
+        <div class="col-3">
+            <h6>Address</h6>
+        </div>
+        <div class="col-9">
+            <p class="mb-0">@Model.address</p>
+        </div>
+    </div>
+    <h4 class="mt-3">Websites and Social Links</h4>
+    <hr>
+    <div class="row">
+        <div class="col-3">
+            <h6>Social Link</h6>
+        </div>
+        <div class="col-9">
+            <p class="mb-0">@Model.instagramLink</p>
+        </div>
+    </div>
+    <h4 class="mt-3">Basic Information</h4>
+    <hr>
+    <div class="row">
+        <div class="col-3">
+            <h6>Birth Date</h6>
+        </div>
+        <div class="col-9">
+            <p class="mb-0">@Model.Dob</p>
+        </div>
+        <div class="col-3">
+            <h6>Gender</h6>
+        </div>
+        <div class="col-9">
+            <p class="mb-0">@Model.gender</p>
+        </div>
+        <div class="col-3">
+            <h6>Language</h6>
+        </div>
+        <div class="col-9">
+            @if (Model.languages != null && Model.languages.Any())
+            {
+                <p class="mb-0">@string.Join(", ", Model.languages)</p>
+            }
+            else
+            {
+                <p class="mb-0">No languages available.</p>
+            }
+        </div>
+
+
+    </div>
+</div>
