@@ -1,0 +1,34 @@
+﻿@model Neo4j.ViewModels.SocialMediaVM
+
+<form asp-controller="User" asp-action="SocialMedia" method="post" enctype="multipart/form-data">
+    
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="facebookLink" class="form-label">Facebook:</label>
+        <input asp-for="facebookLink" type="text" class="form-control" id="facebook" value="@Model.facebookLink">
+        <span asp-validation-for="facebookLink" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="twitterLink" class="form-label">Twitter:</label>
+        <input asp-for="twitterLink" type="text" class="form-control" id="twitter" value="@Model.twitterLink">
+        <span asp-validation-for="twitterLink" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="googleLink" class="form-label">Google +:</label>
+        <input asp-for="googleLink" type="text" class="form-control" id="google" value="@Model.googleLink">
+        <span asp-validation-for="googleLink" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="instagramLink" class="form-label">Instagram:</label>
+        <input asp-for="instagramLink" type="text" class="form-control" id="instagram" value="@Model.instagramLink">
+        <span asp-validation-for="instagramLink" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="youtubeLink" class="form-label">You Tube:</label>
+        <input asp-for="youtubeLink" type="text" class="form-control" id="youtube" value="@Model.youtubeLink">
+        <span asp-validation-for="youtubeLink" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary me-2">Submit</button>
+    <button type="reset" class="btn bg-soft-danger" onclick="window.location.href='@Url.Action("Profile", "User")'">Cancel</button>
+</form>
