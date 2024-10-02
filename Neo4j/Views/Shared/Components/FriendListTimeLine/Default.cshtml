@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Neo4j.ViewModels.SearchVM>
+
+<ul class="profile-img-gallary p-0 m-0 list-unstyled">
+    @foreach(var item in Model)
+    {
+        <li class="">
+            <a href="#">
+                <img src="../assets/images/user/05.jpg" alt="@item.Name" class="img-fluid" />
+            </a>
+            <h6 class="mt-2 text-center">@item.Name</h6>
+        </li>
+    }
+</ul>

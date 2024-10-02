@@ -117,11 +117,12 @@ namespace MyMVCApp.Services
             var users = new List<SearchVM>();
 
             var query = @"
-                MATCH (u:User)
-                WHERE u.username CONTAINS $searchTerm
-                OPTIONAL MATCH (u)<-[:follows]-(follower:User)
-                RETURN u AS user, COUNT(follower) AS followersCount
-                ";
+                            MATCH (u:User)
+                            WHERE u.username CONTAINS $searchTerm
+                            OPTIONAL MATCH (u)<-[:follows|:friend_with]-(follower:User)
+                            RETURN u AS user, COUNT(DISTINCT follower) AS followersCount, u.profileImage AS ProfileImage, u.id AS ID 
+                        ";
+
 
             var session = _driver.AsyncSession();
             try
@@ -131,16 +132,19 @@ namespace MyMVCApp.Services
                 {
                     var userNode = record["user"].As<INode>();
                     var followersCount = record["followersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
 
                     userNode.Properties.TryGetValue("username", out var username);
                     userNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = userNode.Id,
+                        ID = id?.ToString(),
                         Name = username?.ToString(), 
                         City = city?.ToString(), 
-                        FollowersCount = followersCount 
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
                     };
 
                     users.Add(user);
@@ -158,6 +162,36 @@ namespace MyMVCApp.Services
 
             return users;
         }
+
+        public async Task<bool?> AreFriendsAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:friend_with]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS areFriends";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["areFriends"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
 
         public async Task<string?> GetHashedPassword(string email)
         {
@@ -741,7 +775,7 @@ namespace MyMVCApp.Services
                 OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                 RETURN friend AS Friend, 
                        COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                       friend.profileImage AS ProfileImage
+                       friend.profileImage AS ProfileImage, u.id as ID 
             ";
 
             var session = _driver.AsyncSession();
@@ -753,13 +787,14 @@ namespace MyMVCApp.Services
                     var friendNode = record["Friend"].As<INode>();
                     var followersCount = record["FollowersCount"].As<int>();
                     var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
 
                     friendNode.Properties.TryGetValue("username", out var username);
                     friendNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = friendNode.Id,
+                        ID = id?.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -792,7 +827,7 @@ namespace MyMVCApp.Services
                             WHERE duration.between(r.since, date()).days <= 7
                             RETURN friend AS Friend, 
                                    COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                                   friend.profileImage AS ProfileImage
+                                   friend.profileImage AS ProfileImage, u.id as ID 
                         ";
 
 
@@ -806,13 +841,14 @@ namespace MyMVCApp.Services
                     var friendNode = record["Friend"].As<INode>();
                     var followersCount = record["FollowersCount"].As<int>();
                     var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
 
                     friendNode.Properties.TryGetValue("username", out var username);
                     friendNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = friendNode.Id,
+                        ID = id?.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -845,7 +881,7 @@ namespace MyMVCApp.Services
                         WHERE u.country = friend.country
                         RETURN friend AS Friend, 
                                COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                               friend.profileImage AS ProfileImage
+                               friend.profileImage AS ProfileImage, u.id as ID 
                     ";
 
 
@@ -859,17 +895,70 @@ namespace MyMVCApp.Services
                     var friendNode = record["Friend"].As<INode>();
                     var followersCount = record["FollowersCount"].As<int>();
                     var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
 
                     friendNode.Properties.TryGetValue("username", out var username);
                     friendNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = friendNode.Id,
+                        ID = id?.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
                         ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return users;
+        }
+
+        public async Task<IEnumerable<SearchVM>> FriendListTimeLineByIdAsync(string id)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID 
+                LIMIT 9
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                await result.ForEachAsync(record =>
+                {
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = id?.ToString(),
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage 
                     };
 
                     users.Add(user);

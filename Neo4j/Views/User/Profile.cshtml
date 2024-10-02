@@ -165,51 +165,9 @@
                                             <div class="header-title">
                                                 <h4 class="card-title">Friends</h4>
                                             </div>
-                                            <div class="card-header-toolbar d-flex align-items-center">
-                                                <p class="m-0"><a href="javacsript:void();">Add New </a></p>
-                                            </div>
                                         </div>
                                         <div class="card-body">
-                                            <ul class="profile-img-gallary p-0 m-0 list-unstyled">
-                                                <li class="">
-                                                    <a href="#">
-                                                        <img src="../assets/images/user/05.jpg" alt="gallary-image" class="img-fluid" />
-                                                    </a>
-                                                    <h6 class="mt-2 text-center">Anna Rexia</h6>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#"><img src="../assets/images/user/06.jpg" alt="gallary-image" class="img-fluid" /></a>
-                                                    <h6 class="mt-2 text-center">Tara Zona</h6>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#"><img src="../assets/images/user/07.jpg" alt="gallary-image" class="img-fluid" /></a>
-                                                    <h6 class="mt-2 text-center">Polly Tech</h6>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#"><img src="../assets/images/user/08.jpg" alt="gallary-image" class="img-fluid" /></a>
-                                                    <h6 class="mt-2 text-center">Bill Emia</h6>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#"><img src="../assets/images/user/09.jpg" alt="gallary-image" class="img-fluid" /></a>
-                                                    <h6 class="mt-2 text-center">Moe Fugga</h6>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#"><img src="../assets/images/user/10.jpg" alt="gallary-image" class="img-fluid" /></a>
-                                                    <h6 class="mt-2 text-center">Hal Appeno </h6>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#"><img src="../assets/images/user/07.jpg" alt="gallary-image" class="img-fluid" /></a>
-                                                    <h6 class="mt-2 text-center">Zack Lee</h6>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#"><img src="../assets/images/user/06.jpg" alt="gallary-image" class="img-fluid" /></a>
-                                                    <h6 class="mt-2 text-center">Terry Aki</h6>
-                                                </li>
-                                                <li class="">
-                                                    <a href="#"><img src="../assets/images/user/05.jpg" alt="gallary-image" class="img-fluid" /></a>
-                                                    <h6 class="mt-2 text-center">Greta Life</h6>
-                                                </li>
-                                            </ul>
+                                           @*  @await Component.InvokeAsync("FriendListTimeLine") *@
                                         </div>
                                     </div>
                                 </div>
@@ -223,7 +181,7 @@
                                         <div class="card-body">
                                             <div class="d-flex align-items-center">
                                                 <div class="user-img">
-                                                    <img src="../assets/images/user/1.jpg" alt="userimg" class="avatar-60 rounded-circle">
+                                                    <img src="@Model.profileImage" alt="userimg" class="avatar-60 rounded-circle">
                                                 </div>
                                                 <form class="post-text ms-3 w-100 " data-bs-toggle="modal" data-bs-target="#post-modal" action="#">
                                                     <input type="text" class="form-control rounded" placeholder="Write something here..." style="border:none;">
@@ -262,7 +220,7 @@
                                                     <div class="modal-body">
                                                         <div class="d-flex align-items-center">
                                                             <div class="user-img">
-                                                                <img src="../assets/images/user/1.jpg" alt="userimg" class="avatar-60 rounded-circle img-fluid">
+                                                                <img src="@Model.profileImage" alt="userimg" class="avatar-60 rounded-circle img-fluid">
                                                             </div>
                                                             <form class="post-text ms-3 w-100" action="#">
                                                                 <input type="text" class="form-control rounded" placeholder="Write something here..." style="border:none;">
@@ -300,7 +258,7 @@
                                                             <div class="d-flex align-items-center justify-content-between">
                                                                 <div class="d-flex align-items-center">
                                                                     <div class="user-img me-3">
-                                                                        <img src="../assets/images/user/1.jpg" alt="userimg" class="avatar-60 rounded-circle img-fluid">
+                                                                        <img src="@Model.profileImage" alt="userimg" class="avatar-60 rounded-circle img-fluid">
                                                                     </div>
                                                                     <h6>Your Story</h6>
                                                                 </div>
@@ -363,12 +321,12 @@
                                                 <div class="user-post-data pb-3">
                                                     <div class="d-flex justify-content-between">
                                                         <div class="me-3">
-                                                            <img class="rounded-circle  avatar-60" src="../assets/images/user/1.jpg" alt="">
+                                                            <img class="rounded-circle  avatar-60" src="@Model.profileImage" alt="">
                                                         </div>
                                                         <div class="w-100">
                                                             <div class="d-flex justify-content-between flex-wrap">
                                                                 <div class="">
-                                                                    <h5 class="mb-0 d-inline-block"><a href="#" class="">Bni Cyst</a></h5>
+                                                                    <h5 class="mb-0 d-inline-block"><a href="#" class="">@Model.username</a></h5>
                                                                     <p class="ms-1 mb-0 d-inline-block">Add New Post</p>
                                                                     <p class="mb-0">3 hour ago</p>
                                                                 </div>
@@ -545,12 +503,12 @@
                                                 <div class="user-post-data py-3">
                                                     <div class="d-flex  justify-content-between">
                                                         <div class="me-3">
-                                                            <img class="rounded-circle  avatar-60" src="../assets/images/user/1.jpg" alt="">
+                                                            <img class="rounded-circle  avatar-60" src="@Model.profileImage" alt="">
                                                         </div>
                                                         <div class="w-100">
                                                             <div class="d-flex justify-content-between">
                                                                 <div class="">
-                                                                    <h5 class="mb-0 d-inline-block me-1"><a href="#" class="">Bni Cyst</a></h5>
+                                                                    <h5 class="mb-0 d-inline-block me-1"><a href="#" class="">@Model.username</a></h5>
                                                                     <p class="mb-0 d-inline-block">Share Anna Mull's Post</p>
                                                                     <p class="mb-0">5 hour ago</p>
                                                                 </div>
@@ -727,12 +685,12 @@
                                                 <div class="user-post-data py-3">
                                                     <div class="d-flex justify-content-between">
                                                         <div class="me-3">
-                                                            <img class="rounded-circle avatar-60" src="../assets/images/user/1.jpg" alt="">
+                                                            <img class="rounded-circle avatar-60" src="@Model.profileImage" alt="">
                                                         </div>
                                                         <div class="w-100">
                                                             <div class="d-flex justify-content-between">
                                                                 <div class="">
-                                                                    <h5 class="mb-0 d-inline-block"><a href="#" class="">Bni Cyst</a></h5>
+                                                                    <h5 class="mb-0 d-inline-block"><a href="#" class="">@Model.username</a></h5>
                                                                     <p class="ms-1 mb-0 d-inline-block">Update his Status</p>
                                                                     <p class="mb-0">7 hour ago</p>
                                                                 </div>

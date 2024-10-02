@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyMVCApp.Services;
+using Neo4j.Services;
 
 namespace Neo4j.Controllers
 {
@@ -15,9 +16,24 @@ namespace Neo4j.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string searchTerm)
         {
+            var userId = HttpContext.Session.GetString("id");
+
             var users = await _neo4jService.SearchUsersAsync(searchTerm);
-            ViewBag.SearchTerm = searchTerm;
-            return View(users); 
+
+            foreach (var user in users)
+            {
+                if (user.ID.ToString() == userId)
+                {
+                    user.IsCurrentUser = true;
+                }
+                else
+                {
+                    var areFriends = await _neo4jService.AreFriendsAsync(userId, user.ID.ToString());
+                    user.AreFriends = areFriends;
+                }
+            }
+
+            return View(users);
         }
     }
 }
