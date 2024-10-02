@@ -14,7 +14,7 @@ namespace Neo4j.Controllers
             _neo4jService = neo4jService;
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
             var username = HttpContext.Session.GetString("username");
 
@@ -27,9 +27,10 @@ namespace Neo4j.Controllers
                 return RedirectToAction("SignIn", "SignUp");
             }
 
-            return View();
+            string email = HttpContext.Session.GetString("email");
+            var friends = await _neo4jService.GetFriendsAsync(email);
+            return View(friends);
         }
-
 
         public IActionResult EditProfile()
         {

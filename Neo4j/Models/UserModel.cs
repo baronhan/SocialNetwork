@@ -24,7 +24,8 @@
         public string? TwitterLink { get; set; }       
         public string? GoogleLink { get; set; }       
         public string? InstagramLink { get; set; }    
-        public string? YoutubeLink { get; set; }        
+        public string? YoutubeLink { get; set; }
+        public int FriendsNum { get; set; }
 
         public UserModel() { }
 
@@ -67,6 +68,7 @@
             GoogleLink = googleLink;
             InstagramLink = instagramLink;
             YoutubeLink = youtubeLink;
+            FriendsNum = 0;
         }
 
     }

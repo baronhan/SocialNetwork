@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyMVCApp.Services;
@@ -43,6 +44,9 @@ builder.Services.AddScoped<UserService>();
 
 // Đăng ký IHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
+
+// Registering the EmailSender service
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 

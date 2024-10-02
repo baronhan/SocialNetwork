@@ -5,6 +5,8 @@ namespace Neo4j.Services
 {
     public class UserService
     {
+        public UserService() { }
+
         public string RegisterUser(string password)
         {
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);

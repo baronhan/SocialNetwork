@@ -6,12 +6,16 @@ using Neo4j.Driver;
 using Neo4j.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Neo4j.Models;
+using Microsoft.AspNetCore.Identity;
+using Neo4j.Services;
 
 namespace MyMVCApp.Services
 {
     public class Neo4jService
     {
         private readonly IDriver _driver;
+        private UserService _userService;
 
         public Neo4jService(string uri, string username, string password)
         {
@@ -458,5 +462,85 @@ namespace MyMVCApp.Services
             return user;
         }
 
+        public async Task<string> GeneratePasswordResetTokenAsync(string email)
+        {
+            var token = Guid.NewGuid().ToString();  // Tạo token ngẫu nhiên
+
+            var query = @"
+                MATCH (u:User {email: $email})
+                SET u.resetToken = $token, u.tokenCreatedAt = datetime()
+                RETURN u";
+
+            using var session = _driver.AsyncSession();
+            await session.RunAsync(query, new { email = email, token });
+
+            return token;
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(string email, string token, string newPassword)
+        {
+            // First, check if the token is valid
+            var validateTokenQuery = @"
+                MATCH (u:User {email: $email})
+                WHERE u.resetToken = $token AND u.tokenCreatedAt > datetime() - duration({hours: 1})
+                RETURN u";
+
+            using var session = _driver.AsyncSession();
+
+            // Validate the token
+            var validationResult = await session.RunAsync(validateTokenQuery, new { email, token });
+
+            // Fetch all records
+            var records = await validationResult.ToListAsync();
+            if (!records.Any())
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Token không hợp lệ hoặc đã hết hạn." });
+            }
+
+            // If the token is valid, hash the new password
+            _userService = new UserService();
+            string hashedPassword = _userService.RegisterUser(newPassword);
+
+            // Update the user's password
+            var updatePasswordQuery = @"
+                MATCH (u:User {email: $email})
+                SET u.password = $hashedPassword, u.resetToken = NULL, u.tokenCreatedAt = NULL
+                RETURN u";
+
+            await session.RunAsync(updatePasswordQuery, new { email, hashedPassword });
+
+            return IdentityResult.Success;
+        }
+
+        public async Task<List<UserModel>> GetFriendsAsync(string userEmail)
+        {
+            var friends = new List<UserModel>();
+
+            var query = @"
+                MATCH (u:User {email: $email})-[:friend_with]->(friends)-[:friend_with]->(f:User)
+                RETURN friends.username AS Username, COUNT(f) AS FriendsNum, friends.profileImage AS ProfileImage";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { email = userEmail });
+                await result.ForEachAsync(record =>
+                {
+                    var friend = new UserModel
+                    {
+                        Username = record["Username"].As<string>(),
+                        FriendsNum = record["FriendsNum"].As<int>(),
+                        ProfileImage = record["ProfileImage"].As<string>()
+                    };
+                    friends.Add(friend);
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return friends;
+        }
     }
 }
