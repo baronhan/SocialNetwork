@@ -104,7 +104,7 @@ namespace MyMVCApp.Services
             {
                 var result = await session.RunAsync("MATCH (u:User {email: $email}) RETURN u", new { email });
 
-                return await result.FetchAsync(); 
+                return await result.FetchAsync();
             }
             finally
             {
@@ -141,8 +141,8 @@ namespace MyMVCApp.Services
                     var user = new SearchVM
                     {
                         ID = id?.ToString(),
-                        Name = username?.ToString(), 
-                        City = city?.ToString(), 
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
                         FollowersCount = followersCount,
                         ProfileImage = profileImage
                     };
@@ -192,6 +192,149 @@ namespace MyMVCApp.Services
             }
         }
 
+        public async Task<IEnumerable<FilterVM>> FilterUsersAsync(string gender, string city, string hobbies)
+        {
+            var users = new List<FilterVM>();
+            var session = _driver.AsyncSession();
+            try
+            {
+                var query = "MATCH (u:User) WHERE 1=1 ";
+                if (!string.IsNullOrEmpty(gender) && gender != "all")
+                {
+                    query += "AND u.gender = $gender ";
+                }
+
+                if (!string.IsNullOrEmpty(city) && city != "all")
+                {
+                    query += "AND u.city = $city ";
+                }
+                if (!string.IsNullOrEmpty(hobbies) && hobbies != "all")
+                {
+                    query += "AND u.hobbies CONTAINS $hobbies ";
+                }
+
+                query += " OPTIONAL MATCH (u)<-[:follows|:friend_with]-(follower:User)";
+                query += " RETURN u AS user, COUNT(DISTINCT follower) AS followersCount, u.profileImage AS ProfileImage, u.id AS ID";
+
+                var result = await session.RunAsync(query, new { gender, city, hobbies });
+                await result.ForEachAsync(record =>
+                {
+                    var userNode = record["user"].As<INode>();
+                    var followersCount = record["followersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    userNode.Properties.TryGetValue("username", out var username);
+                    userNode.Properties.TryGetValue("city", out var cityProperty);
+                    if (id == null)
+                    {
+                       
+                        return;
+                    }
+                    var user = new FilterVM
+                    {
+                        ID = id,
+                        Name = username?.ToString(),
+                        City = cityProperty?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                }
+                );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return users;
+
+        }
+
+        public async Task<IEnumerable<string>> GetGendersAsync()
+        {
+            var genders = new List<string>();
+
+            var query = @"
+                  MATCH (u:User)
+                  RETURN DISTINCT u.gender AS Gender";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query);
+                await result.ForEachAsync(record =>
+                {
+                    var gender = record["Gender"].As<string>();
+                    genders.Add(gender);
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return genders;
+        }
+
+        public async Task<IEnumerable<string>> GetCitiesAsync()
+        {
+            var cities = new List<string>();
+
+            var query = @"
+                  MATCH (u:User)
+                  RETURN DISTINCT u.city AS City";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query);
+                await result.ForEachAsync(record =>
+                {
+                    var city = record["City"].As<string>();
+                    cities.Add(city);
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return cities;
+        }
+
+        public async Task<IEnumerable<string>> GetHobbiesAsync()
+        {
+            var hobbies = new List<string>();
+
+            var query = @"
+                  MATCH (u:User)
+                  UNWIND split(u.hobbies, ', ') AS hobby
+                  RETURN DISTINCT hobby AS Hobby";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query);
+                await result.ForEachAsync(record =>
+                {
+                    var hobby = record["Hobby"].As<string>();
+                    hobbies.Add(hobby);
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return hobbies;
+        }
 
         public async Task<string?> GetHashedPassword(string email)
         {
@@ -352,14 +495,14 @@ namespace MyMVCApp.Services
                     country = model.Country,
                     city = model.City,
                     gender = model.Gender,
-                    dob = model.Dob.ToString("yyyy-MM-dd"), 
+                    dob = model.Dob.ToString("yyyy-MM-dd"),
                     age = model.Age,
                     maritalStatus = model.MaritalStatus,
                     profileDescription = model.ProfileDescription,
                     profileImage = model.ProfileImage
                 });
 
-               
+
                 return await result.ConsumeAsync() != null;
             }
             finally
@@ -393,19 +536,19 @@ namespace MyMVCApp.Services
 
             try
             {
-                
+
                 var query = "MATCH (u:User {username: $username}) RETURN u.profileImage AS profileImage";
                 var result = await session.RunAsync(query, new { username });
 
-               
+
                 var records = await result.ToListAsync();
 
-                
+
                 return records.FirstOrDefault()?["profileImage"]?.As<string>();
             }
             finally
             {
-              
+
                 await session.CloseAsync();
             }
 
@@ -431,7 +574,7 @@ namespace MyMVCApp.Services
             }
             finally
             {
-                await session.CloseAsync(); 
+                await session.CloseAsync();
             }
         }
 
@@ -445,7 +588,7 @@ namespace MyMVCApp.Services
                     var query = "MATCH (u:User {id: $id}) SET u.mobile = $phoneNumber, u.email = $email RETURN u";
                     var result = await tx.RunAsync(query, new { id, phoneNumber, email });
 
-                    if(await result.FetchAsync())
+                    if (await result.FetchAsync())
                     {
                         return true;
                     }
@@ -666,8 +809,8 @@ namespace MyMVCApp.Services
                         instagramLink = record["Instagram"].As<string>(),
                         twitterLink = record["Twitter"].As<string>(),
                         youtubeLink = record["Youtube"].As<string>(),
-                        followers = record["followers"].As<int>(), 
-                        following = record["following"].As<int>()  
+                        followers = record["followers"].As<int>(),
+                        following = record["following"].As<int>()
                     };
                 }
             }
@@ -798,7 +941,7 @@ namespace MyMVCApp.Services
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
-                        ProfileImage = profileImage 
+                        ProfileImage = profileImage
                     };
 
                     users.Add(user);
@@ -958,7 +1101,7 @@ namespace MyMVCApp.Services
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
-                        ProfileImage = profileImage 
+                        ProfileImage = profileImage
                     };
 
                     users.Add(user);
