@@ -14,16 +14,14 @@ namespace Neo4j.Controllers
             _neo4jService = neo4jService;
         }
 
-        public async Task<IActionResult> Profile()
+        public async Task<IActionResult> Profile(string id)
         {
             ProfileVM user = null;
 
-            var userId = HttpContext.Session.GetString("id");
+            var userId = id ?? HttpContext.Session.GetString("id");
 
             if (userId != null)
             {
-                userId = HttpContext.Session.GetString("id");
-
                 user = await _neo4jService.GetProfileByIdAsync(userId);
             }
             else

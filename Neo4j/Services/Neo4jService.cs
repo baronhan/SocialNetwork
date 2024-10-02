@@ -121,11 +121,12 @@ namespace MyMVCApp.Services
             var users = new List<SearchVM>();
 
             var query = @"
-                MATCH (u:User)
-                WHERE u.username CONTAINS $searchTerm
-                OPTIONAL MATCH (u)<-[:follows]-(follower:User)
-                RETURN u AS user, COUNT(follower) AS followersCount
-                ";
+                            MATCH (u:User)
+                            WHERE u.username CONTAINS $searchTerm
+                            OPTIONAL MATCH (u)<-[:follows|:friend_with]-(follower:User)
+                            RETURN u AS user, COUNT(DISTINCT follower) AS followersCount, u.profileImage AS ProfileImage, u.id AS ID 
+                        ";
+
 
             var session = _driver.AsyncSession();
             try
@@ -135,16 +136,19 @@ namespace MyMVCApp.Services
                 {
                     var userNode = record["user"].As<INode>();
                     var followersCount = record["followersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
 
                     userNode.Properties.TryGetValue("username", out var username);
                     userNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = userNode.Id,
+                        ID = id?.ToString(),
                         Name = username?.ToString(), 
                         City = city?.ToString(), 
-                        FollowersCount = followersCount 
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
                     };
 
                     users.Add(user);
@@ -162,6 +166,36 @@ namespace MyMVCApp.Services
 
             return users;
         }
+
+        public async Task<bool?> AreFriendsAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:friend_with]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS areFriends";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["areFriends"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
 
         public async Task<string?> GetHashedPassword(string email)
         {
@@ -742,7 +776,7 @@ namespace MyMVCApp.Services
                 OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                 RETURN friend AS Friend, 
                        COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                       friend.profileImage AS ProfileImage
+                       friend.profileImage AS ProfileImage, u.id as ID 
             ";
 
             var session = _driver.AsyncSession();
@@ -754,13 +788,14 @@ namespace MyMVCApp.Services
                     var friendNode = record["Friend"].As<INode>();
                     var followersCount = record["FollowersCount"].As<int>();
                     var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
 
                     friendNode.Properties.TryGetValue("username", out var username);
                     friendNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = friendNode.Id,
+                        ID = id?.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -793,7 +828,7 @@ namespace MyMVCApp.Services
                             WHERE duration.between(r.since, date()).days <= 7
                             RETURN friend AS Friend, 
                                    COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                                   friend.profileImage AS ProfileImage
+                                   friend.profileImage AS ProfileImage, u.id as ID 
                         ";
 
 
@@ -807,13 +842,14 @@ namespace MyMVCApp.Services
                     var friendNode = record["Friend"].As<INode>();
                     var followersCount = record["FollowersCount"].As<int>();
                     var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
 
                     friendNode.Properties.TryGetValue("username", out var username);
                     friendNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = friendNode.Id,
+                        ID = id?.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -846,7 +882,7 @@ namespace MyMVCApp.Services
                         WHERE u.country = friend.country
                         RETURN friend AS Friend, 
                                COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                               friend.profileImage AS ProfileImage
+                               friend.profileImage AS ProfileImage, u.id as ID 
                     ";
 
 
@@ -860,13 +896,14 @@ namespace MyMVCApp.Services
                     var friendNode = record["Friend"].As<INode>();
                     var followersCount = record["FollowersCount"].As<int>();
                     var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
 
                     friendNode.Properties.TryGetValue("username", out var username);
                     friendNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = friendNode.Id,
+                        ID = id?.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -888,14 +925,62 @@ namespace MyMVCApp.Services
             return users;
         }
 
-        public async Task<string> GeneratePasswordResetTokenAsync(string email)
+        public async Task<IEnumerable<SearchVM>> FriendListTimeLineByIdAsync(string id)
         {
-            var token = Guid.NewGuid().ToString();  // Tạo token ngẫu nhiên
+            var users = new List<SearchVM>();
 
             var query = @"
-                MATCH (u:User {email: $email})
-                SET u.resetToken = $token, u.tokenCreatedAt = datetime()
-                RETURN u";
+                MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID 
+                LIMIT 9
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                await result.ForEachAsync(record =>
+                {
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = id?.ToString(),
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage 
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            
+            return users;
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(string email)
+        {
+            var token = Guid.NewGuid().ToString();
+
+            var query = @"
+                        MATCH (u:User {email: $email})
+                        SET u.resetToken = $token, u.tokenCreatedAt = datetime()
+                        RETURN u";
 
             using var session = _driver.AsyncSession();
             await session.RunAsync(query, new { email = email, token });
@@ -905,33 +990,28 @@ namespace MyMVCApp.Services
 
         public async Task<IdentityResult> ResetPasswordAsync(string email, string token, string newPassword)
         {
-            // First, check if the token is valid
             var validateTokenQuery = @"
-                MATCH (u:User {email: $email})
-                WHERE u.resetToken = $token AND u.tokenCreatedAt > datetime() - duration({hours: 1})
-                RETURN u";
+                        MATCH (u:User {email: $email})
+                        WHERE u.resetToken = $token AND u.tokenCreatedAt > datetime() - duration({hours: 1})
+                        RETURN u";
 
             using var session = _driver.AsyncSession();
 
-            // Validate the token
             var validationResult = await session.RunAsync(validateTokenQuery, new { email, token });
 
-            // Fetch all records
             var records = await validationResult.ToListAsync();
             if (!records.Any())
             {
                 return IdentityResult.Failed(new IdentityError { Description = "Token không hợp lệ hoặc đã hết hạn." });
             }
 
-            // If the token is valid, hash the new password
             _userService = new UserService();
             string hashedPassword = _userService.RegisterUser(newPassword);
 
-            // Update the user's password
             var updatePasswordQuery = @"
-                MATCH (u:User {email: $email})
-                SET u.password = $hashedPassword, u.resetToken = NULL, u.tokenCreatedAt = NULL
-                RETURN u";
+                        MATCH (u:User {email: $email})
+                        SET u.password = $hashedPassword, u.resetToken = NULL, u.tokenCreatedAt = NULL
+                        RETURN u";
 
             await session.RunAsync(updatePasswordQuery, new { email, hashedPassword });
 
@@ -943,9 +1023,8 @@ namespace MyMVCApp.Services
             var friends = new List<UserModel>();
 
             var query = @"
-                MATCH (u:User {email: $email})-[:friend_with]->(friends)-[:friend_with]->(f:User)
-                RETURN friends.username AS Username, COUNT(f) AS FriendsNum, friends.profileImage AS ProfileImage";
-
+                        MATCH (u:User {email: $email})-[:friend_with]->(friends)-[:friend_with]->(f:User)
+                        RETURN friends.username AS Username, COUNT(f) AS FriendsNum, friends.profileImage AS ProfileImage";
             var session = _driver.AsyncSession();
             try
             {
@@ -965,8 +1044,8 @@ namespace MyMVCApp.Services
             {
                 await session.CloseAsync();
             }
+
             return friends;
         }
-
     }
 }
