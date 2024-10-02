@@ -1,4 +1,5 @@
-﻿
+﻿@model Neo4j.ViewModels.ProfileVM
+
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
@@ -18,7 +19,7 @@
                         <div class="card-body">
                             <div class="d-flex align-items-center">
                                 <div class="user-img">
-                                    <img src="../assets/images/user/1.jpg" alt="userimg" class="avatar-60 rounded-circle">
+                                    <img src="@Model.profileImage" alt="userimg" class="avatar-60 rounded-circle">
                                 </div>
                                 <form class="post-text ms-3 w-100 " data-bs-toggle="modal" data-bs-target="#post-modal" action="javascript:void();">
                                     <input type="text" class="form-control rounded" placeholder="Write something here..." style="border:none;">

@@ -645,7 +645,8 @@ namespace MyMVCApp.Services
                                u.twitterLink AS Twitter,
                                u.youtubeLink AS Youtube,
                                count(f) AS followers,
-                               count(follow) AS following
+                               count(follow) AS following, 
+                               u.id AS ID
                         ";
 
             var session = _driver.AsyncSession();
@@ -667,7 +668,8 @@ namespace MyMVCApp.Services
                         twitterLink = record["Twitter"].As<string>(),
                         youtubeLink = record["Youtube"].As<string>(),
                         followers = record["followers"].As<int>(), 
-                        following = record["following"].As<int>()  
+                        following = record["following"].As<int>(),
+                        ID = record["ID"].As<string>()
                     };
                 }
             }
@@ -691,7 +693,7 @@ namespace MyMVCApp.Services
                                u.mobile AS Mobile,             
                                u.dob AS Dob,                    
                                u.gender AS Gender,             
-                               u.language AS Languages
+                               u.language AS Languages                               
                     ";
 
             var session = _driver.AsyncSession();
