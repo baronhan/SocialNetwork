@@ -86,8 +86,7 @@
               "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\FriendList\\Default.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-01T14:40:10.042Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T14:40:10.042Z"
             },
             {
               "$type": "Document",
@@ -99,8 +98,7 @@
               "RelativeToolTip": "Neo4j\\Models\\ViewComponents\\FriendListViewComponent.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAAC0AAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-01T14:18:06.279Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T14:18:06.279Z"
             },
             {
               "$type": "Document",
@@ -112,8 +110,7 @@
               "RelativeToolTip": "Neo4j\\Views\\Search\\Index.cshtml",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-01T14:16:33.239Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T14:16:33.239Z"
             },
             {
               "$type": "Document",
@@ -123,7 +120,7 @@
               "RelativeDocumentMoniker": "Neo4j\\Services\\Neo4jService.cs",
               "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
               "RelativeToolTip": "Neo4j\\Services\\Neo4jService.cs",
-              "ViewState": "AgIAAAEDAAAAAAAAAAAewBADAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAALcCAAAAAAAAAAAWwN8CAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-01T14:08:52.456Z",
               "EditorCaption": ""
@@ -138,8 +135,7 @@
               "RelativeToolTip": "Neo4j\\Models\\ViewComponents\\DetailAboutViewComponent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-01T14:02:04.634Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T14:02:04.634Z"
             },
             {
               "$type": "Document",
@@ -151,8 +147,7 @@
               "RelativeToolTip": "Neo4j\\Views\\User\\Profile.cshtml",
               "ViewState": "AgIAAE4EAAAAAAAAAAAAALAEAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-01T13:47:34.09Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T13:47:34.09Z"
             },
             {
               "$type": "Document",
@@ -164,8 +159,7 @@
               "RelativeToolTip": "Neo4j\\Controllers\\UserController.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAACIAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-01T12:51:24.304Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T12:51:24.304Z"
             },
             {
               "$type": "Document",
@@ -177,8 +171,7 @@
               "RelativeToolTip": "Neo4j\\wwwroot\\app\\profile.html",
               "ViewState": "AgIAADQIAAAAAAAAAAAvwMwNAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2024-10-01T15:00:13.571Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T15:00:13.571Z"
             },
             {
               "$type": "Document",
@@ -190,8 +183,7 @@
               "RelativeToolTip": "Neo4j\\Controllers\\SearchController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-01T14:16:29.618Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T14:16:29.618Z"
             },
             {
               "$type": "Document",
@@ -203,8 +195,7 @@
               "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\AccountSetting\\Default.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-01T13:38:15.595Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T13:38:15.595Z"
             },
             {
               "$type": "Document",
@@ -216,8 +207,7 @@
               "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\ContactAndBasicInfo\\Default.cshtml",
               "ViewState": "AgIAABsAAAAAAAAAAAAAAAAAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-01T13:34:51.835Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T13:34:51.835Z"
             },
             {
               "$type": "Document",
@@ -229,8 +219,7 @@
               "RelativeToolTip": "Neo4j\\Models\\ViewComponents\\ContactAndBasicInfoViewComponent.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAB8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-01T13:33:42.07Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T13:33:42.07Z"
             },
             {
               "$type": "Document",
@@ -242,8 +231,7 @@
               "RelativeToolTip": "Neo4j\\ViewModels\\ContactInformationVM.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-01T13:23:41.866Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T13:23:41.866Z"
             },
             {
               "$type": "Document",
@@ -255,8 +243,7 @@
               "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\UpdatePersonalInformation\\Default.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAABXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-01T12:55:05.826Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T12:55:05.826Z"
             },
             {
               "$type": "Document",
@@ -268,8 +255,7 @@
               "RelativeToolTip": "Neo4j\\Models\\ViewComponents\\SocialMediaViewComponent.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-01T13:33:48.66Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T13:33:48.66Z"
             },
             {
               "$type": "Document",
@@ -281,8 +267,7 @@
               "RelativeToolTip": "Neo4j\\Views\\Shared\\_LayoutUser.cshtml",
               "ViewState": "AgIAAFECAAAAAAAAAAAAAD0CAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-01T12:51:56.281Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-01T12:51:56.281Z"
             }
           ]
         },
