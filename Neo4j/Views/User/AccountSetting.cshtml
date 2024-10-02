@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "AccountSetting";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+
+<div id="content-page" class="content-page">
+    <div class="container">
+        <div class="row">
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success" role="alert">
+                    @successMessage
+                </div>
+            }
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="header-title">
+                            <h4 class="card-title">Account Setting</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="acc-edit">
+                            @await Component.InvokeAsync("AccountSetting")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between">
+                        <div class="header-title">
+                            <h4 class="card-title">Social Media</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="acc-edit">
+                            @await Component.InvokeAsync("SocialMedia")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -50,8 +50,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VhcmNoXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/Shared/Components/AccountSetting/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcQWNjb3VudFNldHRpbmdcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/Shared/Components/ContactAndBasicInfo/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcQ29udGFjdEFuZEJhc2ljSW5mb1xEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/Shared/Components/DetailAbout/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcRGV0YWlsQWJvdXRcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/Shared/Components/FriendList/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcRnJpZW5kTGlzdFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/Shared/Components/ManageContact/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcTWFuYWdlQ29udGFjdFxEZWZhdWx0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/Shared/Components/SocialMedia/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcU29jaWFsTWVkaWFcRGVmYXVsdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/Shared/Components/UpdatePassword/Default.cshtml]
@@ -80,6 +100,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/SignUp/SignIn.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2lnblVwXFNpZ25Jbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/User/AccountSetting.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxBY2NvdW50U2V0dGluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Personal/HUIT_Baitap/HK7/NoSQL/web/SocialNetwork/Neo4j/Views/User/EditProfile.cshtml]

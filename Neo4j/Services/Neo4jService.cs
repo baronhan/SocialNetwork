@@ -462,6 +462,432 @@ namespace MyMVCApp.Services
             return user;
         }
 
+        public async Task<AccountSettingVM> GetAccountSettingByIdAsync(string id)
+        {
+            AccountSettingVM user = null;
+
+            var query = @"
+            MATCH (u:User {id: $id})
+            RETURN u.username AS UserName,
+                   u.email AS Email,
+                   u.language AS Languages";
+            
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                var records = await result.ToListAsync();
+
+                if (records.Count > 0)
+                {
+                    var record = records.First();
+                    user = new AccountSettingVM
+                    {
+                        userName = record["UserName"].As<string>(),
+                        email = record["Email"].As<string>(),
+                        languages = record["Languages"].As<List<string>>()
+                    };
+                }
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+            return user;
+        }
+
+        public async Task<bool> UpdateAccountSettingAsync(string id, string username, string email, List<string> languages)
+        {
+            var session = _driver.AsyncSession();
+            try
+            {
+                return await session.WriteTransactionAsync(async tx =>
+                {
+                    var query = @"
+                    MATCH (u:User {id: $id})
+                    WITH u, u.language AS currentLanguages, $languages AS newLanguages
+                    SET u.username = $username,
+                        u.email = $email,
+                        u.language = CASE 
+                            WHEN currentLanguages IS NULL THEN newLanguages 
+                            ELSE currentLanguages + [lang IN newLanguages WHERE NOT lang IN currentLanguages]
+                        END
+                    RETURN u";
+
+
+
+                    var result = await tx.RunAsync(query, new { id, username, email, languages });
+
+                    if (await result.FetchAsync())
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<SocialMediaVM> GetSocialMediaByIdAsync(string id)
+        {
+            SocialMediaVM user = null;
+
+            var query = @"
+            MATCH (u:User {id: $id})
+            RETURN u.facebookLink AS Facebook,
+                   u.googleLink AS Google,
+                   u.instagramLink AS Instagram,
+                   u.twitterLink AS Twitter,
+                   u.youtubeLink AS Youtube
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                var records = await result.ToListAsync();
+
+                if (records.Count > 0)
+                {
+                    var record = records.First();
+                    user = new SocialMediaVM
+                    {
+                        facebookLink = record["Facebook"].As<string>(),
+                        googleLink = record["Google"].As<string>(),
+                        instagramLink = record["Instagram"].As<string>(),
+                        twitterLink = record["Twitter"].As<string>(),
+                        youtubeLink = record["Youtube"].As<string>()
+                    };
+                }
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return user;
+        }
+
+        public async Task<bool> UpdateSocialMediaAsync(string id, string facebook, string google, string instagram, string twitter, string youtube)
+        {
+            var session = _driver.AsyncSession();
+            try
+            {
+                return await session.WriteTransactionAsync(async tx =>
+                {
+                    var query = "MATCH (u:User {id: $id}) SET u.facebookLink = $facebook, u.googleLink = $google, u.instagramLink = $instagram, u.twitterLink = $twitter, u.youtubeLink = $youtube RETURN u";
+                    var result = await tx.RunAsync(query, new { id, facebook, google, instagram, twitter, youtube });
+
+                    if (await result.FetchAsync())
+                    {
+                        return true;
+                    }
+
+                    return false;
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<ProfileVM> GetProfileByIdAsync(string id)
+        {
+            ProfileVM user = null;
+
+            var query = @"
+                        MATCH (u:User {id: $id})
+                        OPTIONAL MATCH (u)-[:friend_with]->(f:User)
+                        OPTIONAL MATCH (u)-[:follows]->(follow:User)
+                        RETURN u.profileImage AS ProfileImage,
+                               u.username AS Username,
+                               u.facebookLink AS Facebook,
+                               u.googleLink AS Google,
+                               u.instagramLink AS Instagram,
+                               u.twitterLink AS Twitter,
+                               u.youtubeLink AS Youtube,
+                               count(f) AS followers,
+                               count(follow) AS following
+                        ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                var records = await result.ToListAsync();
+
+                if (records.Count > 0)
+                {
+                    var record = records.First();
+                    user = new ProfileVM
+                    {
+                        username = record["Username"].As<string>(),
+                        profileImage = record["ProfileImage"].As<string>(),
+                        facebookLink = record["Facebook"].As<string>(),
+                        googleLink = record["Google"].As<string>(),
+                        instagramLink = record["Instagram"].As<string>(),
+                        twitterLink = record["Twitter"].As<string>(),
+                        youtubeLink = record["Youtube"].As<string>(),
+                        followers = record["followers"].As<int>(), 
+                        following = record["following"].As<int>()  
+                    };
+                }
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return user;
+        }
+
+        public async Task<ContactInformationVM> GetContactAndBasicInfoByIdAsync(string id)
+        {
+            ContactInformationVM user = null;
+
+            var query = @"
+                        MATCH (u:User {id: $id})
+                        RETURN u.instagramLink AS Instagram,
+                               u.address AS Address,
+                               u.email AS Email,                
+                               u.mobile AS Mobile,             
+                               u.dob AS Dob,                    
+                               u.gender AS Gender,             
+                               u.language AS Languages
+                    ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                var records = await result.ToListAsync();
+
+                if (records.Count > 0)
+                {
+                    var record = records.First();
+                    user = new ContactInformationVM
+                    {
+                        email = record["Email"].As<string>(),
+                        address = record["Address"].As<string>(),
+                        mobile = record["Mobile"].As<string>(),
+                        instagramLink = record["Instagram"].As<string>(),
+                        Dob = DateOnly.Parse(record["Dob"].As<string>()),
+                        gender = record["Gender"].As<string>(),
+                        languages = record["Languages"].As<List<string>>()
+                    };
+
+                }
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return user;
+        }
+
+        public async Task<DetailAboutVM> GetDetailAboutByIdAsync(string id)
+        {
+            DetailAboutVM user = null;
+
+            var query = @"
+                        MATCH (u:User {id: $id})
+                        RETURN u.firstname AS FirstName,
+                               u.lastname AS LastName,
+                               u.age AS Age,                
+                               u.country AS Country,             
+                               u.username AS Username
+                    ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                var records = await result.ToListAsync();
+
+                if (records.Count > 0)
+                {
+                    var record = records.First();
+                    user = new DetailAboutVM
+                    {
+                        userName = record["Username"].As<string>(),
+                        country = record["Country"].As<string>(),
+                        age = record["Age"].As<int>(),
+                        lastName = record["LastName"].As<string>(),
+                        firstName = record["FirstName"].As<string>()
+                    };
+
+                }
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return user;
+        }
+
+        public async Task<IEnumerable<SearchVM>> FriendListByIdAsync(string id)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                await result.ForEachAsync(record =>
+                {
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = friendNode.Id,
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage 
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return users;
+        }
+
+        internal async Task<IEnumerable<SearchVM>?> RecentlyAddedFriendsByIdAsync(string id)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                            MATCH (u:User {id: $id})-[r:friend_with]->(friend:User)
+                            OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                            OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                            WHERE duration.between(r.since, date()).days <= 7
+                            RETURN friend AS Friend, 
+                                   COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                                   friend.profileImage AS ProfileImage
+                        ";
+
+
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                await result.ForEachAsync(record =>
+                {
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = friendNode.Id,
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return users;
+        }
+
+        internal async Task<IEnumerable<SearchVM>?> FriendsFromHometownByIdAsync(string id)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                        MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                        OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                        OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                        WHERE u.country = friend.country
+                        RETURN friend AS Friend, 
+                               COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                               friend.profileImage AS ProfileImage
+                    ";
+
+
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                await result.ForEachAsync(record =>
+                {
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = friendNode.Id,
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return users;
+        }
+
         public async Task<string> GeneratePasswordResetTokenAsync(string email)
         {
             var token = Guid.NewGuid().ToString();  // Tạo token ngẫu nhiên
@@ -539,8 +965,8 @@ namespace MyMVCApp.Services
             {
                 await session.CloseAsync();
             }
-
             return friends;
         }
+
     }
 }
