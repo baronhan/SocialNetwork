@@ -28,21 +28,28 @@ namespace Neo4j.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
+
             if (await _neo4jService.EmailExistsAsync(model.Email))
             { 
                 var token = await _neo4jService.GeneratePasswordResetTokenAsync(model.Email);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { token, email = model.Email }, Request.Scheme);
+                var resetpwUrl = Url.Action("ResetPassword", "Account", new { token, email = model.Email }, Request.Scheme);
 
-                await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                    $"Vui lòng đặt lại mật khẩu của bạn bằng cách <a href='{callbackUrl}'>click vào đây</a>.");
+                await _emailSender.SendEmailAsync(model.Email, "Reset Your Password", resetpwUrl);
+
+                TempData["Email"] = model.Email;
 
                 return RedirectToAction("ForgotPasswordConfirmation");
             }
+
             return View();
         }
 
         public IActionResult ForgotPasswordConfirmation()
         {
+            var email = TempData["Email"]?.ToString();
+
+            ViewBag.Email = email;
+
             return View();
         }
 

@@ -1169,6 +1169,9 @@
                                         <div class="tab-pane fade" id="home-town" role="tabpanel">
                                             @await Component.InvokeAsync("FriendList", new { listType = "MutualHometownFriendList" })
                                         </div>
+                                        <div class="tab-pane fade" id="blocked" role="tabpanel">
+                                            @await Component.InvokeAsync("BlockedList", new { listType = "BlockedList" })
+                                        </div>
                                     </div>
                                 </div>
 

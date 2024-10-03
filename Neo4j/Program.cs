@@ -46,7 +46,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddHttpContextAccessor();
 
 // Registering the EmailSender service
-builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IEmailSender, EmailSenderService>();
 
 var app = builder.Build();
 

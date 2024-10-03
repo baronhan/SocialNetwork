@@ -4,8 +4,8 @@ namespace Neo4j.ViewModels
 {
     public class ForgotPasswordVM
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid emaild address")]
         public string Email { get; set; }
     }
 }

@@ -38,6 +38,9 @@ namespace Neo4j.Models.ViewComponents
                 case "MutualHometownFriendList":
                     users = await _neo4jService.FriendsFromHometownByIdAsync(id); 
                     break;
+                case "BlockedList":
+                    users = await _neo4jService.BlockedListByIdAsync(id);
+                    break;
             }
 
             if (users == null)

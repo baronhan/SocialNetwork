@@ -15,7 +15,6 @@ namespace MyMVCApp.Services
     public class Neo4jService
     {
         private readonly IDriver _driver;
-        private UserService _userService;
 
         public Neo4jService(string uri, string username, string password)
         {
@@ -992,7 +991,7 @@ namespace MyMVCApp.Services
         {
             var validateTokenQuery = @"
                         MATCH (u:User {email: $email})
-                        WHERE u.resetToken = $token AND u.tokenCreatedAt > datetime() - duration({hours: 1})
+                        WHERE u.resetToken = $token AND u.tokenCreatedAt > datetime() - duration({hours: 24})
                         RETURN u";
 
             using var session = _driver.AsyncSession();
@@ -1005,7 +1004,7 @@ namespace MyMVCApp.Services
                 return IdentityResult.Failed(new IdentityError { Description = "Token không hợp lệ hoặc đã hết hạn." });
             }
 
-            _userService = new UserService();
+            UserService _userService = new UserService();
             string hashedPassword = _userService.RegisterUser(newPassword);
 
             var updatePasswordQuery = @"
@@ -1018,34 +1017,420 @@ namespace MyMVCApp.Services
             return IdentityResult.Success;
         }
 
-        public async Task<List<UserModel>> GetFriendsAsync(string userEmail)
+        public async Task AddFriendAsync(string userId, string otherUserId)
         {
-            var friends = new List<UserModel>();
-
             var query = @"
-                        MATCH (u:User {email: $email})-[:friend_with]->(friends)-[:friend_with]->(f:User)
-                        RETURN friends.username AS Username, COUNT(f) AS FriendsNum, friends.profileImage AS ProfileImage";
+                MATCH (a:User {id: $userId}), (b:User {id: $otherUserId})
+                CREATE (a)-[:friend_request {status: 'pending'}]->(b)
+                CREATE (a)-[:follows]->(b)";
+
             var session = _driver.AsyncSession();
             try
             {
-                var result = await session.RunAsync(query, new { email = userEmail });
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool> IsFriendRequestPendingAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                        MATCH (u:User {id: $userId})-[r:friend_request]->(friend:User {id: $otherUserId})
+                        WHERE r.status = 'pending'
+                        RETURN r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                return await result.FetchAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task CancelFriendRequestAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})-[r]->(b:User {id: $otherUserId})
+                DELETE r";
+            
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task AcceptFriendRequestAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})<-[fr:friend_request]-(b:User {id: $otherUserId})
+                SET fr.status = 'accepted'
+                CREATE (a)-[:follows]->(b)
+                CREATE (a)-[:friend_with {since: date()}]->(b),
+                       (b)-[:friend_with {since: date()}]->(a)
+                DELETE fr";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task RejectFriendRequestAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})<-[r]-(b:User {id: $otherUserId})
+                DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task Unfriend_UnblockAsync(string userId, string friendId)
+        {
+            var query = @"
+                MATCH (u:User {id: $userId})-[r]-(friend:User {id: $friendId})
+                DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    var result = await tx.RunAsync(query, new { userId, friendId });
+                    await result.ConsumeAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task UnfollowAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (u:User {id: $userId})-[r:follows]->(friend:User {id: $otherUserId})
+                DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    var result = await tx.RunAsync(query, new { userId, otherUserId });
+                    await result.ConsumeAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task FollowAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId}), (b:User {id: $otherUserId})
+                WHERE NOT exists((a)-[:follows]->(b))
+                CREATE (a)-[:follows]->(b)";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    var result = await tx.RunAsync(query, new { userId, otherUserId });
+                    await result.ConsumeAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task BlockAsync(string userId, string friendId)
+        {
+            var query = @"
+                MATCH (u:User {id: $userId})-[r:friend_with]->(friend:User {id: $friendId})
+                CREATE (u)-[:blocked]->(friend)
+                CREATE (friend)-[:is_blocked]->(u)";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    var result = await tx.RunAsync(query, new { userId, friendId });
+                    await result.ConsumeAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<IEnumerable<SearchVM>> BlockedListByIdAsync(string id)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                WHERE (u)-[:blocked]->(friend)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID 
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
                 await result.ForEachAsync(record =>
                 {
-                    var friend = new UserModel
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
                     {
-                        Username = record["Username"].As<string>(),
-                        FriendsNum = record["FriendsNum"].As<int>(),
-                        ProfileImage = record["ProfileImage"].As<string>()
+                        ID = id.ToString(),
+                        Name = username.ToString(),
+                        City = city.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
                     };
-                    friends.Add(friend);
+
+                    users.Add(user);
                 });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
             finally
             {
                 await session.CloseAsync();
             }
 
-            return friends;
+            return users;
+        }
+
+        public async Task<bool?> AreCloseFriendsAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:close_friend]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS areCloseFriends";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["areCloseFriends"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool?> HasFollowedAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:follows]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS hasFollowed";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["hasFollowed"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool?> HasBlockedAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:blocked]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS hasBlocked";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["hasBlocked"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool?> HasSentFriendRequestAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:friend_request]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS sent";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["sent"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool?> HasReceivedFriendRequestAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})<-[:friend_request]-(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS received";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["received"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
         }
     }
 }
