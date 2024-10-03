@@ -645,7 +645,8 @@ namespace MyMVCApp.Services
                                u.twitterLink AS Twitter,
                                u.youtubeLink AS Youtube,
                                count(f) AS followers,
-                               count(follow) AS following
+                               count(follow) AS following, 
+                               u.id AS ID
                         ";
 
             var session = _driver.AsyncSession();
@@ -667,7 +668,8 @@ namespace MyMVCApp.Services
                         twitterLink = record["Twitter"].As<string>(),
                         youtubeLink = record["Youtube"].As<string>(),
                         followers = record["followers"].As<int>(), 
-                        following = record["following"].As<int>()  
+                        following = record["following"].As<int>(),
+                        ID = record["ID"].As<string>()
                     };
                 }
             }
@@ -691,7 +693,7 @@ namespace MyMVCApp.Services
                                u.mobile AS Mobile,             
                                u.dob AS Dob,                    
                                u.gender AS Gender,             
-                               u.language AS Languages
+                               u.language AS Languages                               
                     ";
 
             var session = _driver.AsyncSession();
@@ -775,7 +777,7 @@ namespace MyMVCApp.Services
                 OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                 RETURN friend AS Friend, 
                        COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                       friend.profileImage AS ProfileImage, u.id as ID 
+                       friend.profileImage AS ProfileImage, friend.id as ID 
             ";
 
             var session = _driver.AsyncSession();
@@ -787,14 +789,14 @@ namespace MyMVCApp.Services
                     var friendNode = record["Friend"].As<INode>();
                     var followersCount = record["FollowersCount"].As<int>();
                     var profileImage = record["ProfileImage"].As<string>();
-                    var id = record["ID"].As<string>();
+                    var _id = record["ID"].As<string>();
 
                     friendNode.Properties.TryGetValue("username", out var username);
                     friendNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = id?.ToString(),
+                        ID = _id?.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -827,7 +829,7 @@ namespace MyMVCApp.Services
                             WHERE duration.between(r.since, date()).days <= 7
                             RETURN friend AS Friend, 
                                    COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                                   friend.profileImage AS ProfileImage, u.id as ID 
+                                   friend.profileImage AS ProfileImage, friend.id as ID 
                         ";
 
 
@@ -881,7 +883,7 @@ namespace MyMVCApp.Services
                         WHERE u.country = friend.country
                         RETURN friend AS Friend, 
                                COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                               friend.profileImage AS ProfileImage, u.id as ID 
+                               friend.profileImage AS ProfileImage, friend.id as ID 
                     ";
 
 
@@ -934,7 +936,7 @@ namespace MyMVCApp.Services
                 OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                 RETURN friend AS Friend, 
                        COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                       friend.profileImage AS ProfileImage, u.id as ID 
+                       friend.profileImage AS ProfileImage, friend.id as ID 
                 LIMIT 9
             ";
 

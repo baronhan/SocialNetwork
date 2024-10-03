@@ -14,15 +14,33 @@ namespace Neo4j.Controllers
             _neo4jService = neo4jService;
         }
 
-        public async Task<IActionResult> Profile(string id)
+        public IActionResult RedirectToProfile(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                HttpContext.Session.SetString("UserId", id); 
+                return RedirectToAction("Profile");
+            }
+
+            return RedirectToAction("SignIn", "SignUp");
+        }
+
+
+        public async Task<IActionResult> Profile()
         {
             ProfileVM user = null;
 
-            var userId = id ?? HttpContext.Session.GetString("id");
+            var userId = HttpContext.Session.GetString("UserId");
 
-            if (userId != null)
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = HttpContext.Session.GetString("id");
+            }
+
+            if (!string.IsNullOrEmpty(userId))
             {
                 user = await _neo4jService.GetProfileByIdAsync(userId);
+                HttpContext.Session.Remove("UserId");
             }
             else
             {
@@ -30,7 +48,9 @@ namespace Neo4j.Controllers
             }
 
             return View(user);
+
         }
+
 
 
 
