@@ -13,9 +13,9 @@ namespace Neo4j.Models.ViewComponents
             _neo4jService = neo4jService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string listType, string id)
+        public async Task<IViewComponentResult> InvokeAsync(string listType, string userId)
         {
-            var userId = id ?? HttpContext.Session.GetString("id");
+            var id = userId ?? HttpContext.Session.GetString("id");
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -27,16 +27,16 @@ namespace Neo4j.Models.ViewComponents
             switch (listType)
             {
                 case "FriendList":
-                    users = await _neo4jService.FriendListByIdAsync(userId); 
+                    users = await _neo4jService.FriendListByIdAsync(id); 
                     break;
                 case "RecentlyFriendList":
-                    users = await _neo4jService.RecentlyAddedFriendsByIdAsync(userId); 
+                    users = await _neo4jService.RecentlyAddedFriendsByIdAsync(id); 
                     break;
                 case "CloseFriendList":
                     //users = await _neo4jService.CloseFriendsByIdAsync(id); 
                     break;
                 case "MutualHometownFriendList":
-                    users = await _neo4jService.FriendsFromHometownByIdAsync(userId); 
+                    users = await _neo4jService.FriendsFromHometownByIdAsync(id); 
                     break;
             }
 

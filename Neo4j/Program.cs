@@ -7,9 +7,9 @@ using Neo4j.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Thêm MVC với TempData Provider
+var mvcBuilder = builder.Services.AddControllersWithViews();
+mvcBuilder.AddSessionStateTempDataProvider();
 
 // Cấu hình session
 builder.Services.AddDistributedMemoryCache();
@@ -20,7 +20,7 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-// Register Neo4jService as Scoped
+// Đăng ký Neo4jService
 builder.Services.AddScoped<Neo4jService>(provider =>
 {
     var configuration = builder.Configuration;
@@ -30,15 +30,13 @@ builder.Services.AddScoped<Neo4jService>(provider =>
     return new Neo4jService(uri, username, password);
 });
 
-builder.Services.AddControllersWithViews();
-
 // Cấu hình kích thước tối đa cho tải lên file
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 104857600; // Ví dụ: 100MB
 });
 
-// Register UserService
+// Đăng ký UserService
 builder.Services.AddScoped<UserService>();
 
 // Đăng ký IHttpContextAccessor
@@ -46,7 +44,7 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Cấu hình pipeline HTTP request.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -56,6 +54,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Đảm bảo Session được gọi trước Routing
 app.UseSession();
 
 app.UseRouting();

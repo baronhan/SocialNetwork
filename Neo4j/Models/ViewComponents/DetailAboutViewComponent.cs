@@ -14,16 +14,16 @@ namespace Neo4j.Models.ViewComponents
             _neo4jService = neo4jService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string id)
+        public async Task<IViewComponentResult> InvokeAsync(string userId)
         {
-            var userId = id ?? HttpContext.Session.GetString("id");
+            var id = userId ?? HttpContext.Session.GetString("id");
 
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(id))
             {
                 return View("Error");
             }
 
-            var user = await _neo4jService.GetDetailAboutByIdAsync(userId);
+            var user = await _neo4jService.GetDetailAboutByIdAsync(id);
 
             if (user == null)
             {
