@@ -7756,23 +7756,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\TPUS\\.nuget\\packages\\": {},
+    "C:\\Users\\LENOVO\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Study\\nam4\\NoSQL\\SocialNetwork\\Neo4j\\Neo4j.csproj",
+      "projectUniqueName": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Neo4j.csproj",
       "projectName": "Neo4j",
-      "projectPath": "D:\\Study\\nam4\\NoSQL\\SocialNetwork\\Neo4j\\Neo4j.csproj",
-      "packagesPath": "C:\\Users\\TPUS\\.nuget\\packages\\",
-      "outputPath": "D:\\Study\\nam4\\NoSQL\\SocialNetwork\\Neo4j\\obj\\",
+      "projectPath": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Neo4j.csproj",
+      "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
+      "outputPath": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\TPUS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
