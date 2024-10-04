@@ -33,7 +33,7 @@ namespace Neo4j.Models.ViewComponents
                     users = await _neo4jService.RecentlyAddedFriendsByIdAsync(id); 
                     break;
                 case "CloseFriendList":
-                    //users = await _neo4jService.CloseFriendsByIdAsync(id); 
+                    users = await _neo4jService.CloseFriendsByIdAsync(id); 
                     break;
                 case "MutualHometownFriendList":
                     users = await _neo4jService.FriendsFromHometownByIdAsync(id); 
