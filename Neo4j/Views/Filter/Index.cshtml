@@ -11,50 +11,48 @@
             <div class="col-sm-12">
                 <div class="card-body">
                     <h2>Filter Friends</h2>
-                    
+
                     <!-- Form lọc -->
                     <form asp-action="Index" method="get">
                         <div class="row">
                             <div class="col-md-4">
-                                <label for="gender">Gender</label>
-                                <select id="gender" name="genderFilter" class="form-control">
-                                    <option value="all">All</option>
+                                <label for="gender">Gender: </label>
+                                <select id="gender" name="gender" class="form-control">
+                                    <option value="">All</option>
                                     @foreach (var gender in Model.Genders)
                                     {
                                         <option value="@gender" selected="@(gender == Model.SelectedGender ? "selected" : "")">@gender</option>
-
-
                                     }
                                 </select>
                             </div>
 
                             <div class="col-md-4">
-                                <label for="city">City</label>
-                                <select id="city" name="cityFilter" class="form-control">
-                                    <option value="all">All</option>
+                                <label for="city">City: </label>
+                                <select id="city" name="city" class="form-control">
+                                    <option value="">All</option>
                                     @foreach (var city in Model.Cities)
                                     {
                                         <option value="@city" selected="@(city == Model.SelectedCity ? "selected" : "")">@city</option>
-                                       
+
 
                                     }
                                 </select>
                             </div>
 
                             <div class="col-md-4">
-                                <label for="hobbies">Hobbies</label>
-                                <select id="hobbies" name="hobbiesFilter" class="form-control">
-                                    <option value="all">All</option>
-                                    @foreach (var hobby in Model.Hobbies)
+                                <label for="maritalStatus">Marital Status: </label>
+                                <select id="maritalStatus" name="maritalStatus" class="form-control">
+                                    <option value="">All</option>
+                                    @foreach (var marital in Model.Maritals)
                                     {
-                                        <option value="@hobby" selected="@(hobby == Model.SelectedHobbies ? "selected" : "")">@hobby</option>
+                                        <option value="@marital" selected="@(marital == Model.SelectedMaritals ? "selected" : "")">@marital</option>
                                     }
                                 </select>
                             </div>
                         </div>
-
                         <button type="submit" class="btn btn-primary mt-3">Apply Filters</button>
                     </form>
+
 
                     <h2 class="mt-4">Friends</h2>
                     <div class="friend-list-tab mt-2">
@@ -74,6 +72,8 @@
                                                             <div class="friend-info ms-3">
                                                                 <h5>@user.Name</h5>
                                                                 <p class="mb-0">City: @user.City</p>
+                                                                <p class="mb-0">Gender: @user.Gender</p>
+                                                                <p class="mb-0">MaritalStatus: @user.MaritalStatus</p>
                                                                 <p class="mb-0">Followers: @user.FollowersCount</p>
                                                             </div>
                                                         </div>
@@ -110,6 +110,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

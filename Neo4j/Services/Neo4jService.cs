@@ -192,31 +192,39 @@ namespace MyMVCApp.Services
             }
         }
 
-        public async Task<IEnumerable<FilterVM>> FilterUsersAsync(string gender, string city, string hobbies)
+        public async Task<IEnumerable<FilterVM>> FilterUsersAsync(string gender, string city, string maritalStatus)
         {
             var users = new List<FilterVM>();
             var session = _driver.AsyncSession();
             try
             {
-                var query = "MATCH (u:User) WHERE 1=1 ";
+                var query = "MATCH (u:User) ";
+                
+                var conditions = new List<string>();
+
                 if (!string.IsNullOrEmpty(gender) && gender != "all")
                 {
-                    query += "AND u.gender = $gender ";
+                    conditions.Add("u.gender = $gender");
                 }
 
                 if (!string.IsNullOrEmpty(city) && city != "all")
                 {
-                    query += "AND u.city = $city ";
+                    conditions.Add("u.city = $city");
                 }
-                if (!string.IsNullOrEmpty(hobbies) && hobbies != "all")
+
+                if (!string.IsNullOrEmpty(maritalStatus) && maritalStatus != "all")
                 {
-                    query += "AND u.hobbies CONTAINS $hobbies ";
+                    conditions.Add("u.maritalStatus = $maritalStatus");
                 }
 
-                query += " OPTIONAL MATCH (u)<-[:follows|:friend_with]-(follower:User)";
-                query += " RETURN u AS user, COUNT(DISTINCT follower) AS followersCount, u.profileImage AS ProfileImage, u.id AS ID";
+                if(conditions.Count > 0)
+                {
+                    query += "WHERE " + string.Join(" AND ", conditions) + " ";
+                }    
+                query += "OPTIONAL MATCH (u)<-[:follows|:friend_with]-(follower:User)";
+                query += "RETURN u AS user, COUNT(DISTINCT follower) AS followersCount, u.profileImage AS ProfileImage, u.id AS ID";
 
-                var result = await session.RunAsync(query, new { gender, city, hobbies });
+                var result = await session.RunAsync(query, new { gender, city, maritalStatus });
                 await result.ForEachAsync(record =>
                 {
                     var userNode = record["user"].As<INode>();
@@ -226,9 +234,10 @@ namespace MyMVCApp.Services
 
                     userNode.Properties.TryGetValue("username", out var username);
                     userNode.Properties.TryGetValue("city", out var cityProperty);
+                    userNode.Properties.TryGetValue("gender", out var genderProperty);
+                    userNode.Properties.TryGetValue("maritalStatus", out var maritalProperty);
                     if (id == null)
                     {
-                       
                         return;
                     }
                     var user = new FilterVM
@@ -236,6 +245,8 @@ namespace MyMVCApp.Services
                         ID = id,
                         Name = username?.ToString(),
                         City = cityProperty?.ToString(),
+                        Gender = genderProperty?.ToString(),
+                        MaritalStatus = maritalProperty?.ToString(),
                         FollowersCount = followersCount,
                         ProfileImage = profileImage
                     };
@@ -309,14 +320,13 @@ namespace MyMVCApp.Services
             return cities;
         }
 
-        public async Task<IEnumerable<string>> GetHobbiesAsync()
+        public async Task<IEnumerable<string>> GetMaritalStaAsync()
         {
-            var hobbies = new List<string>();
+            var maritals = new List<string>();
 
             var query = @"
                   MATCH (u:User)
-                  UNWIND split(u.hobbies, ', ') AS hobby
-                  RETURN DISTINCT hobby AS Hobby";
+                  RETURN DISTINCT u.maritalStatus AS MaritalStatus";
 
             var session = _driver.AsyncSession();
             try
@@ -324,8 +334,8 @@ namespace MyMVCApp.Services
                 var result = await session.RunAsync(query);
                 await result.ForEachAsync(record =>
                 {
-                    var hobby = record["Hobby"].As<string>();
-                    hobbies.Add(hobby);
+                    var marital = record["MaritalStatus"].As<string>();
+                    maritals.Add(marital);
                 });
             }
             finally
@@ -333,7 +343,7 @@ namespace MyMVCApp.Services
                 await session.CloseAsync();
             }
 
-            return hobbies;
+            return maritals;
         }
 
         public async Task<string?> GetHashedPassword(string email)

@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyMVCApp.Services;
 using Neo4j.ViewModels;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Neo4j.Controllers
 {
     public class FilterController : Controller
     {
-
         private readonly Neo4jService _neo4jService;
 
         public FilterController(Neo4jService neo4jService)
@@ -15,16 +16,26 @@ namespace Neo4j.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string gender, string city, string hobbies)
+        public async Task<IActionResult> Index(string gender, string city, string maritalStatus)
         {
             var userId = HttpContext.Session.GetString("id");
 
-            var users = await _neo4jService.FilterUsersAsync(gender, city, hobbies);
-            if (users == null)
-            {
-                users = new List<FilterVM>(); 
-            }
+            var gendersCBO = await _neo4jService.GetGendersAsync();
+            var citiesCBO = await _neo4jService.GetCitiesAsync();
+            var maritalsCBO = await _neo4jService.GetMaritalStaAsync();
+            var users = await _neo4jService.FilterUsersAsync(gender, city, maritalStatus);
 
+            var filterCBOVM = new FilterCBOVM
+            {
+                Users = users,
+                Genders = gendersCBO,
+                Cities = citiesCBO,
+                Maritals = maritalsCBO,
+                SelectedGender = gender,
+                SelectedCity = city,
+                SelectedMaritals = maritalStatus
+            };
+          
             foreach (var user in users)
             {
                 if (user.ID != null && user.ID.ToString() == userId)
@@ -37,25 +48,7 @@ namespace Neo4j.Controllers
                     user.AreFriends = areFriends;
                 }
             }
-
-           // Truyền dữ liệu vào combobox
-            var gendersCBO = await _neo4jService.GetGendersAsync();
-            var citiesCBO = await _neo4jService.GetCitiesAsync();
-            var hobbiesCBO = await _neo4jService.GetHobbiesAsync();
-
-            var filterCBOVM = new FilterCBOVM
-            {
-                Users = users,
-                Genders = gendersCBO,
-                Cities = citiesCBO,
-                Hobbies = hobbiesCBO,
-                SelectedGender = gender,
-                SelectedCity = city,
-                SelectedHobbies = hobbies
-            };
-
             return View(filterCBOVM);
         }
     }
 }
-
