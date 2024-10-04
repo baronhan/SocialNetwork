@@ -17,115 +17,119 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Neo4j
 build_property.RootNamespace = Neo4j
-build_property.ProjectDir = D:\HKI 2024-2025\NoSQL\Neo4j\Neo4j\
+build_property.ProjectDir = D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\HKI 2024-2025\NoSQL\Neo4j\Neo4j
+build_property.MSBuildProjectDirectory = D:\Study\nam4\NoSQL\SocialNetwork\Neo4j
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Home/Index.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Filter/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmlsdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Search/Index.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Search/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VhcmNoXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/AccountSetting/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/AccountSetting/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcQWNjb3VudFNldHRpbmdcRGVmYXVsdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/ContactAndBasicInfo/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/ContactAndBasicInfo/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcQ29udGFjdEFuZEJhc2ljSW5mb1xEZWZhdWx0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/DetailAbout/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/DetailAbout/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcRGV0YWlsQWJvdXRcRGVmYXVsdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/FriendListTimeLine/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/FriendListTimeLine/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcRnJpZW5kTGlzdFRpbWVMaW5lXERlZmF1bHQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/FriendList/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/FriendList/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcRnJpZW5kTGlzdFxEZWZhdWx0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/ManageContact/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/ManageContact/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcTWFuYWdlQ29udGFjdFxEZWZhdWx0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/SocialMedia/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/SocialMedia/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcU29jaWFsTWVkaWFcRGVmYXVsdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/UpdatePassword/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/UpdatePassword/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcVXBkYXRlUGFzc3dvcmRcRGVmYXVsdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Components/UpdatePersonalInformation/Default.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Components/UpdatePersonalInformation/Default.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcVXBkYXRlUGVyc29uYWxJbmZvcm1hdGlvblxEZWZhdWx0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/Error.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/_LayoutUser.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/_LayoutUser.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRVc2VyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/SignUp/Register.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/SignUp/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2lnblVwXFJlZ2lzdGVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/SignUp/SignIn.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/SignUp/SignIn.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2lnblVwXFNpZ25Jbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/User/AccountSetting.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/User/AccountSetting.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxBY2NvdW50U2V0dGluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/User/EditProfile.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/User/EditProfile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxFZGl0UHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/User/FriendAdded.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/User/FriendAdded.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxGcmllbmRBZGRlZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/User/ManageContact.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/User/ManageContact.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxNYW5hZ2VDb250YWN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/User/Profile.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/User/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxQcm9maWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/User/UpdatePassword.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/User/UpdatePassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxVcGRhdGVQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/User/UserCreated.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/User/UserCreated.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxVc2VyQ3JlYXRlZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/_ViewImports.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/_ViewStart.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/HKI 2024-2025/NoSQL/Neo4j/Neo4j/Views/Shared/_Layout.cshtml]
+[D:/Study/nam4/NoSQL/SocialNetwork/Neo4j/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-5ylbhqgfzy
