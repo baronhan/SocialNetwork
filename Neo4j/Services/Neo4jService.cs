@@ -922,6 +922,59 @@ namespace MyMVCApp.Services
             return users;
         }
 
+        public async Task<IEnumerable<SearchVM>> CloseFriendsByIdAsync(string id)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                MATCH (u:User {id: $id})-[:close_friend]->(friend:User)
+                WHERE NOT exists((u)-[:blocked]->(friend))
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                WHERE (u)-[:close_friend]->(friend)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID 
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                await result.ForEachAsync(record =>
+                {
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = id.ToString(),
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return users;
+        }
+
         public async Task<IEnumerable<SearchVM>> FriendListTimeLineByIdAsync(string id)
         {
             var users = new List<SearchVM>();
@@ -1232,59 +1285,6 @@ namespace MyMVCApp.Services
             {
                 await session.CloseAsync();
             }
-        }
-
-        public async Task<IEnumerable<SearchVM>> CloseFriendsByIdAsync(string id)
-        {
-            var users = new List<SearchVM>();
-
-            var query = @"
-                MATCH (u:User {id: $id})-[:close_friend]->(friend:User)
-                WHERE NOT exists((u)-[:blocked]->(friend))
-                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
-                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
-                WHERE (u)-[:close_friend]->(friend)
-                RETURN friend AS Friend, 
-                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                       friend.profileImage AS ProfileImage, u.id as ID 
-            ";
-
-            var session = _driver.AsyncSession();
-            try
-            {
-                var result = await session.RunAsync(query, new { id });
-                await result.ForEachAsync(record =>
-                {
-                    var friendNode = record["Friend"].As<INode>();
-                    var followersCount = record["FollowersCount"].As<int>();
-                    var profileImage = record["ProfileImage"].As<string>();
-                    var id = record["ID"].As<string>();
-
-                    friendNode.Properties.TryGetValue("username", out var username);
-                    friendNode.Properties.TryGetValue("city", out var city);
-
-                    var user = new SearchVM
-                    {
-                        ID = id.ToString(),
-                        Name = username?.ToString(),
-                        City = city?.ToString(),
-                        FollowersCount = followersCount,
-                        ProfileImage = profileImage
-                    };
-
-                    users.Add(user);
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-            finally
-            {
-                await session.CloseAsync();
-            }
-
-            return users;
         }
 
         public async Task<IEnumerable<SearchVM>> BlockedListByIdAsync(string id)
