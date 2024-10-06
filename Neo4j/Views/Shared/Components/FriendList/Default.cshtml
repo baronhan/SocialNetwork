@@ -8,7 +8,7 @@
                 <div class="iq-friendlist-block">
                     <div class="d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
-                            <a asp-controller="User" asp-action="Profile" asp-route-id="@user.ID">
+                            <a asp-controller="User" asp-action="RedirectToProfile" asp-route-id="@user.ID">
                                 <img src="@user.ProfileImage" alt="@user.Name" class="img-fluid">
                             </a>
                             <div class="friend-info ms-3">
@@ -18,16 +18,42 @@
                             </div>
                         </div>
                         <div class="card-header-toolbar d-flex align-items-center">
-                            <div class="dropdown">
-                                <span class="dropdown-toggle btn btn-secondary me-2" id="dropdownMenuButton01" data-bs-toggle="dropdown" aria-expanded="true" role="button">
-                                    <i class="ri-check-line me-1 text-white"></i> Friend
-                                </span>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton01">
-                                    <a class="dropdown-item" href="#">Close Friend</a>
-                                    <a class="dropdown-item" href="#">Unfollow</a>
-                                    <a class="dropdown-item" href="#">Unfriend</a>
-                                    <a class="dropdown-item" href="#">Block</a>
-                                </div>
+                            <div class="dropdown" id="friendDropdown_@user.ID">
+                                @if (user.Blocked == false)
+                                {
+                                    <button class="dropdown-toggle btn btn-secondary me-2" id="friendButton_@user.ID" data-bs-toggle="dropdown" aria-expanded="true" type="button">
+                                        <i class="ri-check-line me-1 text-white"></i> Friend
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton01">
+                                        @if (user.AreCloseFriends == false)
+                                        {
+                                            <button type="submit" class="dropdown-item" onclick="updateFriendStatus(@user.ID, 'closeFriend')">Close Friend</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="dropdown-item" onclick="updateFriendStatus(@user.ID, 'removeCloseFriend')">Remove Close Friend</button>
+                                        }
+
+                                        @if (user.HasFollowed == true)
+                                        {
+                                            <button type="submit" class="dropdown-item" onclick="updateFriendStatus(@user.ID, 'unfollow')">Unfollow</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="dropdown-item" onclick="updateFriendStatus(@user.ID, 'follow')">Follow</button>
+                                        }
+
+                                        <button type="submit" class="dropdown-item" onclick="updateFriendStatus(@user.ID, 'unfriend')">Unfriend</button>
+
+                                        <button type="submit" class="dropdown-item" onclick="updateFriendStatus(@user.ID, 'block')">Block</button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <button onclick="updateFriendStatus(@user.ID, 'unblock')" class="dropdown-toggle btn btn-secondary me-2" id="friendButton_@user.ID" data-bs-toggle="dropdown" aria-expanded="true" type="button">
+                                        <i class="ri-check-line me-1 text-white"></i> Unblock
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>
@@ -36,3 +62,29 @@
         }
     </div>
 </div>
+
+<script>
+    function updateFriendStatus(userId, action) {
+        $.ajax({
+            url: '/Friend/UpdateStatus', 
+            type: 'POST',
+            data: {
+                id: userId,
+                action: action
+            },
+            success: function (response) {
+                console.log(response);
+                if (action === 'unfriend') {
+                    $('#friendDropdown_' + userId).closest('.col-md-6').remove();
+                } else {
+                    $('#friendButton_' + userId).html(response.updatedButtonHtml);
+                    $('#friendButton_' + userId).dropdown(); 
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                alert("Có lỗi xảy ra, vui lòng thử lại.");
+            }
+        });
+    }
+</script>

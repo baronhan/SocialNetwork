@@ -115,13 +115,13 @@ namespace MyMVCApp.Services
             }
         }
 
-        public async Task<IEnumerable<SearchVM>> SearchUsersAsync(string searchTerm)
+        public async Task<IEnumerable<SearchVM>> SearchUsersAsync(string searchTerm, string userId)
         {
             var users = new List<SearchVM>();
 
             var query = @"
-                            MATCH (u:User)
-                            WHERE u.username CONTAINS $searchTerm
+                            MATCH (u:User), (a:User {id: $userId})
+                            WHERE u.username CONTAINS $searchTerm AND NOT exists((a)-[:blocked]->(u))
                             OPTIONAL MATCH (u)<-[:follows|:friend_with]-(follower:User)
                             RETURN u AS user, COUNT(DISTINCT follower) AS followersCount, u.profileImage AS ProfileImage, u.id AS ID 
                         ";
@@ -130,7 +130,7 @@ namespace MyMVCApp.Services
             var session = _driver.AsyncSession();
             try
             {
-                var result = await session.RunAsync(query, new { searchTerm });
+                var result = await session.RunAsync(query, new { searchTerm, userId });
                 await result.ForEachAsync(record =>
                 {
                     var userNode = record["user"].As<INode>();
@@ -253,15 +253,12 @@ namespace MyMVCApp.Services
             }
         }
 
-        public async Task<string?> GetUserIdByEmailAsync(string email)
+        public async Task<string> GetUserIdByEmailAsync(string email)
         {
             var session = _driver.AsyncSession();
             try
             {
-                var result = await session.RunAsync(
-                    @"MATCH (u:User {email: $email})
-              RETURN u.id AS id",
-                    new { email });
+                var result = await session.RunAsync("MATCH (u:User {email: $email}) RETURN u.id AS id", new { email });
 
                 var records = await result.ToListAsync();
                 return records.Count > 0 ? records[0]["id"].As<string>() : null;
@@ -645,7 +642,8 @@ namespace MyMVCApp.Services
                                u.twitterLink AS Twitter,
                                u.youtubeLink AS Youtube,
                                count(f) AS followers,
-                               count(follow) AS following
+                               count(follow) AS following, 
+                               u.id AS ID
                         ";
 
             var session = _driver.AsyncSession();
@@ -667,7 +665,8 @@ namespace MyMVCApp.Services
                         twitterLink = record["Twitter"].As<string>(),
                         youtubeLink = record["Youtube"].As<string>(),
                         followers = record["followers"].As<int>(), 
-                        following = record["following"].As<int>()  
+                        following = record["following"].As<int>(),
+                        ID = record["ID"].As<string>()
                     };
                 }
             }
@@ -691,7 +690,7 @@ namespace MyMVCApp.Services
                                u.mobile AS Mobile,             
                                u.dob AS Dob,                    
                                u.gender AS Gender,             
-                               u.language AS Languages
+                               u.language AS Languages                               
                     ";
 
             var session = _driver.AsyncSession();
@@ -771,11 +770,12 @@ namespace MyMVCApp.Services
 
             var query = @"
                 MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                WHERE NOT exists((u)-[:blocked]->(friend))
                 OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
                 OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                 RETURN friend AS Friend, 
-                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                       friend.profileImage AS ProfileImage, u.id as ID 
+                COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, friend.id as ID 
             ";
 
             var session = _driver.AsyncSession();
@@ -787,14 +787,14 @@ namespace MyMVCApp.Services
                     var friendNode = record["Friend"].As<INode>();
                     var followersCount = record["FollowersCount"].As<int>();
                     var profileImage = record["ProfileImage"].As<string>();
-                    var id = record["ID"].As<string>();
+                    var _id = record["ID"].As<string>();
 
                     friendNode.Properties.TryGetValue("username", out var username);
                     friendNode.Properties.TryGetValue("city", out var city);
 
                     var user = new SearchVM
                     {
-                        ID = id?.ToString(),
+                        ID = _id.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -816,21 +816,20 @@ namespace MyMVCApp.Services
             return users;
         }
 
-        internal async Task<IEnumerable<SearchVM>?> RecentlyAddedFriendsByIdAsync(string id)
+        internal async Task<IEnumerable<SearchVM>> RecentlyAddedFriendsByIdAsync(string id)
         {
             var users = new List<SearchVM>();
 
             var query = @"
                             MATCH (u:User {id: $id})-[r:friend_with]->(friend:User)
+                            WHERE NOT exists((u)-[:blocked]->(friend))
                             OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
                             OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                             WHERE duration.between(r.since, date()).days <= 7
                             RETURN friend AS Friend, 
                                    COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                                   friend.profileImage AS ProfileImage, u.id as ID 
+                                   friend.profileImage AS ProfileImage, friend.id as ID 
                         ";
-
-
 
             var session = _driver.AsyncSession();
             try
@@ -848,7 +847,7 @@ namespace MyMVCApp.Services
 
                     var user = new SearchVM
                     {
-                        ID = id?.ToString(),
+                        ID = id.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -870,21 +869,20 @@ namespace MyMVCApp.Services
             return users;
         }
 
-        internal async Task<IEnumerable<SearchVM>?> FriendsFromHometownByIdAsync(string id)
+        internal async Task<IEnumerable<SearchVM>> FriendsFromHometownByIdAsync(string id)
         {
             var users = new List<SearchVM>();
 
             var query = @"
                         MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                        WHERE NOT exists((u)-[:blocked]->(friend))
                         OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
                         OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
-                        WHERE u.country = friend.country
+                        WHERE u.country IS NOT NULL AND u.country = friend.country
                         RETURN friend AS Friend, 
                                COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                               friend.profileImage AS ProfileImage, u.id as ID 
+                               friend.profileImage AS ProfileImage, friend.id as ID 
                     ";
-
-
 
             var session = _driver.AsyncSession();
             try
@@ -902,7 +900,7 @@ namespace MyMVCApp.Services
 
                     var user = new SearchVM
                     {
-                        ID = id?.ToString(),
+                        ID = id.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -934,7 +932,7 @@ namespace MyMVCApp.Services
                 OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                 RETURN friend AS Friend, 
                        COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                       friend.profileImage AS ProfileImage, u.id as ID 
+                       friend.profileImage AS ProfileImage, friend.id as ID 
                 LIMIT 9
             ";
 
@@ -1213,7 +1211,7 @@ namespace MyMVCApp.Services
         public async Task BlockAsync(string userId, string friendId)
         {
             var query = @"
-                MATCH (u:User {id: $userId})-[r:friend_with]->(friend:User {id: $friendId})
+                MATCH (u:User {id: $userId}),(friend:User {id: $friendId})
                 CREATE (u)-[:blocked]->(friend)
                 CREATE (friend)-[:is_blocked]->(u)";
 
@@ -1236,12 +1234,65 @@ namespace MyMVCApp.Services
             }
         }
 
+        public async Task<IEnumerable<SearchVM>> CloseFriendsByIdAsync(string id)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                MATCH (u:User {id: $id})-[:close_friend]->(friend:User)
+                WHERE NOT exists((u)-[:blocked]->(friend))
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                WHERE (u)-[:close_friend]->(friend)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID 
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                await result.ForEachAsync(record =>
+                {
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = id.ToString(),
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return users;
+        }
+
         public async Task<IEnumerable<SearchVM>> BlockedListByIdAsync(string id)
         {
             var users = new List<SearchVM>();
 
             var query = @"
-                MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                MATCH (u:User {id: $id})-[:blocked]->(friend:User)
                 OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
                 OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                 WHERE (u)-[:blocked]->(friend)
@@ -1267,8 +1318,8 @@ namespace MyMVCApp.Services
                     var user = new SearchVM
                     {
                         ID = id.ToString(),
-                        Name = username.ToString(),
-                        City = city.ToString(),
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
                         FollowersCount = followersCount,
                         ProfileImage = profileImage
                     };
@@ -1426,6 +1477,135 @@ namespace MyMVCApp.Services
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<SearchVM> GetFriendByIdAsync(string friendId)
+        {
+            var query = @"
+                MATCH (f:User)
+                WHERE f.id = $friendId
+                RETURN f.id AS ID, f.name AS Name, f.city AS City, f.followersCount AS FollowersCount, f.profileImage AS ProfileImage";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.ExecuteReadAsync(async tx =>
+                {
+                    var cursor = await tx.RunAsync(query, new { friendId });
+                    var record = await cursor.SingleAsync();
+
+                    return new SearchVM
+                    {
+                        ID = record["ID"].As<string>(),
+                        Name = record["Name"].As<string>(),
+                        City = record["City"].As<string>(),
+                        FollowersCount = record["FollowersCount"].As<int>(),
+                        ProfileImage = record["ProfileImage"].As<string>()
+                    };
+                });
+                return result;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<IEnumerable<SearchVM>> GetFriendRequestsAsync(string userId)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                MATCH (u:User {id: $id})<-[:friend_request]-(friend:User)
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID
+                ";
+
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId });
+                await result.ForEachAsync(record =>
+                {
+                    var userNode = record["user"].As<INode>();
+                    var followersCount = record["followersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    userNode.Properties.TryGetValue("username", out var username);
+                    userNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = id.ToString(),
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+
+            return users;
+        }
+
+        public async Task CloseFriendAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})-[:friend_with]->(b:User {id: $otherUserId})
+                CREATE (a)-[:close_friend {since: date()}]->(b)";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task RemoveCloseFriendAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})-[r:close_friend]->(b:User {id: $otherUserId})
+                DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
             finally
             {

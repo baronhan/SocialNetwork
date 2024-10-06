@@ -2,6 +2,7 @@
 {
     public class ProfileVM
     {
+        public string ID { get; set; }
         public string username { get; set; }
         public string profileImage { get; set; }
         public int followers { get; set; }
@@ -13,8 +14,9 @@
         public string youtubeLink { get; set; }
 
         public ProfileVM() { }
-        public ProfileVM(string username, string profileImage, int followers, int following, string facebookLink, string twitterLink, string googleLink, string instagramLink, string youtubeLink)
+        public ProfileVM(string ID, string username, string profileImage, int followers, int following, string facebookLink, string twitterLink, string googleLink, string instagramLink, string youtubeLink)
         {
+            this.ID = ID;
             this.username = username;
             this.profileImage = profileImage;
             this.followers = followers;

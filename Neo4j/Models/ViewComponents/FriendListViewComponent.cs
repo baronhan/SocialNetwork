@@ -13,11 +13,11 @@ namespace Neo4j.Models.ViewComponents
             _neo4jService = neo4jService;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string listType)
+        public async Task<IViewComponentResult> InvokeAsync(string listType, string userId)
         {
-            var id = HttpContext.Session.GetString("id");
+            var id = userId ?? HttpContext.Session.GetString("id");
 
-            if (string.IsNullOrEmpty(id))
+            if (string.IsNullOrEmpty(userId))
             {
                 return View("Error");
             }
@@ -33,7 +33,7 @@ namespace Neo4j.Models.ViewComponents
                     users = await _neo4jService.RecentlyAddedFriendsByIdAsync(id); 
                     break;
                 case "CloseFriendList":
-                    //users = await _neo4jService.CloseFriendsByIdAsync(id); 
+                    users = await _neo4jService.CloseFriendsByIdAsync(id); 
                     break;
                 case "MutualHometownFriendList":
                     users = await _neo4jService.FriendsFromHometownByIdAsync(id); 
@@ -43,9 +43,16 @@ namespace Neo4j.Models.ViewComponents
                     break;
             }
 
-            if (users == null)
+            if (users == null || !users.Any())
             {
                 return View("UserNotFound");
+            }
+
+            foreach (var user in users)
+            {
+                user.AreCloseFriends = await _neo4jService.AreCloseFriendsAsync(userId, user.ID.ToString());
+                user.HasFollowed = await _neo4jService.HasFollowedAsync(userId, user.ID.ToString());
+                user.Blocked = await _neo4jService.HasBlockedAsync(userId, user.ID.ToString());
             }
 
             return View("Default", users);

@@ -5,14 +5,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\personal\\huit_baitap\\hk7\\nosql\\web\\socialnetwork\\neo4j\\services\\neo4jservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\services\\neo4jservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\personal\\huit_baitap\\hk7\\nosql\\web\\socialnetwork\\neo4j\\controllers\\searchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\controllers\\searchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\personal\\huit_baitap\\hk7\\nosql\\web\\socialnetwork\\neo4j\\views\\search\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\search\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -32,35 +24,9 @@
               "RelativeDocumentMoniker": "Neo4j\\Services\\Neo4jService.cs",
               "ToolTip": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Services\\Neo4jService.cs",
               "RelativeToolTip": "Neo4j\\Services\\Neo4jService.cs",
-              "ViewState": "AgIAAJQEAAAAAAAAAAAAAK0EAAANAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-03T15:58:53.44Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SearchController.cs",
-              "DocumentMoniker": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Controllers\\SearchController.cs",
-              "RelativeDocumentMoniker": "Neo4j\\Controllers\\SearchController.cs",
-              "ToolTip": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Controllers\\SearchController.cs",
-              "RelativeToolTip": "Neo4j\\Controllers\\SearchController.cs",
-              "ViewState": "AgIAAGsAAAAAAAAAAAAwwH8AAAA9AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-03T14:08:46.937Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Views\\Search\\Index.cshtml",
-              "RelativeDocumentMoniker": "Neo4j\\Views\\Search\\Index.cshtml",
-              "ToolTip": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\Neo4j\\Views\\Search\\Index.cshtml",
-              "RelativeToolTip": "Neo4j\\Views\\Search\\Index.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIEAAABEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-03T14:07:53.614Z",
+              "WhenOpened": "2024-10-06T15:36:30.948Z",
               "EditorCaption": ""
             }
           ]

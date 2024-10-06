@@ -20,7 +20,7 @@ namespace Neo4j.Controllers
 
             ViewData["CurrentSearchTerm"] = searchTerm;
 
-            var users = await _neo4jService.SearchUsersAsync(searchTerm);
+            var users = await _neo4jService.SearchUsersAsync(searchTerm, userId);
 
             foreach (var user in users)
             {
@@ -131,6 +131,48 @@ namespace Neo4j.Controllers
             return RedirectToAction("Index", new { searchTerm });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Accept(string otherUserId)
+        {
+            var userId = HttpContext.Session.GetString("id");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { success = false, message = "User not logged in." });
+            }
 
+            await _neo4jService.AcceptFriendRequestAsync(userId, otherUserId);
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Reject(string otherUserId)
+        {
+            var userId = HttpContext.Session.GetString("id");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { success = false, message = "User not logged in." });
+            }
+
+            await _neo4jService.RejectFriendRequestAsync(userId, otherUserId);
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetCloseFriend(string otherUserId, string searchTerm)
+        {
+            var userId = HttpContext.Session.GetString("id");
+            await _neo4jService.CloseFriendAsync(userId, otherUserId);
+
+            return RedirectToAction("Index", new { searchTerm });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveCloseFriend(string otherUserId, string searchTerm)
+        {
+            var userId = HttpContext.Session.GetString("id");
+            await _neo4jService.RemoveCloseFriendAsync(userId, otherUserId);
+
+            return RedirectToAction("Index", new { searchTerm });
+        }
     }
 }
