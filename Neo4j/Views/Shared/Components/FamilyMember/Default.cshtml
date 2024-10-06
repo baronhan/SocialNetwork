@@ -1,0 +1,132 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<Neo4j.ViewModels.FamilyMemberVM>
+<h4 class="mt-3 mb-3">Family Members</h4>
+<ul class="suggestions-lists m-0 p-0">
+    <li class="d-flex mb-4 align-items-center">
+        <div class="user-img img-fluid"><i class="ri-add-fill"></i></div>
+        <div class="media-support-info ms-3">
+            <h6>
+
+                <a href="javascript:void(0);" onclick="showAddFamilyForm()">
+                    Add Family Members
+                </a>
+
+            </h6>
+        </div>
+    </li>
+
+    @*  Form thêm gia đình *@
+    <div id="add-family-form" style="display:none;">
+        <input type="text" class="form-control" id="family-username" name="username"  required="" placeholder="Enter your username" onkeyup="getUserSuggestions()" />
+
+        <div id="user-suggestions" class="iq-friendlist-block"></div>
+    
+            <div class="d-flex align-items-center">
+                <div class="friend-info id="selected-user-info"></div>
+            </div>
+
+        </br>
+        <select class="form-select" id="relationship">
+            <option value="Mother">Mother</option>
+            <option value="Father">Father</option>
+            <option value="Brother">Brother</option>
+            <option value="Sister">Brother</option>
+            <option value="Son">Son</option>
+            <option value="Daughter">Daughter</option>
+        </select>
+
+        <div class="d-flex">
+            <button class="btn btn-primary me-2" id="save-family-btn" onclick="saveFamilyMember()">Save</button>
+            <button class="btn bg-soft-danger" onclick="cancelAddFamily()">Cancel</button>
+        </div>
+
+
+    </div>
+
+    <script>
+        function showAddFamilyForm() {
+            document.getElementById("add-family-form").style.display = "block";
+        }
+
+        function cancelAddFamily() {
+            document.getElementById("add-family-form").style.display = "none";
+        }
+
+        // Gợi ý username
+        function getUserSuggestions() {
+            var username = document.getElementById("family-username").value;
+            $.ajax({
+                url: '@Url.Action("GetUserSuggestions", "Family")',
+                method: 'GET',
+                data: { username: username },
+                success: function (data) {
+                    $('#user-suggestions').empty();
+                    data.forEach(function (user) {
+                        $('#user-suggestions').append('<div onclick="selectUser(\'' + user.username + '\', \'' + user.profileImage + '\', \'' + user.firstname + '\', \'' + user.lastname + '\')">'
+                            + user.username +
+                            '</div>');
+                    });
+                }
+            });
+        }
+        function selectUser(username, profileImage, firstname, lastname) {
+            $('#family-username').val(username);
+            $('#user-suggestions').empty();
+            $('#selected-user-info').html('<img src="' + profileImage + '" alt="Profile Image" class="rounded-circle avatar-40"> <strong>' + firstname + ' ' + lastname + '</strong>');
+        }
+
+        function saveFamilyMember() {
+            var username = document.getElementById("family-username").value;
+            var relationship = document.getElementById("relationship").value;
+
+            if (!username || !relationship) {
+                alert("Please enter username and select a relationship.");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("AddFamilyRequest", "Family")',
+                method: 'POST',
+                data: {
+                    familyUsername: username,
+                    relationship: relationship
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert("Family member added successfully.");
+                        document.getElementById("add-family-form").style.display = "none";
+                        location.reload();
+                    } else {
+                        alert("Error: " + (response.message || "Failed to add family member."));
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("An error occurred while saving the family member: " + errorThrown);
+                }
+            });
+
+        }
+    </script>
+
+    @foreach (var member in Model)
+    {
+        <li class="d-flex mb-4 align-items-center justify-content-between">
+            <div class="user-img img-fluid">
+                <img src="@member.User.ProfileImage" alt="story-img" class="rounded-circle avatar-40">
+            </div>
+            <div class="w-100">
+                <div class="d-flex justify-content-between">
+                    <div class="ms-3">
+                        <h6>@member.User.Firstname @member.User.Lastname</h6>
+                        <p class="mb-0">@member.Relation</p>
+                    </div>
+                    <div class="edit-relation"><a href="#"><i class="ri-edit-line me-2"></i>Edit</a></div>
+                </div>
+            </div>
+        </li>
+    }
+</ul>

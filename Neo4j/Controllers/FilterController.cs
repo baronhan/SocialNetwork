@@ -23,19 +23,23 @@ namespace Neo4j.Controllers
             var gendersCBO = await _neo4jService.GetGendersAsync();
             var citiesCBO = await _neo4jService.GetCitiesAsync();
             var maritalsCBO = await _neo4jService.GetMaritalStaAsync();
-            var users = await _neo4jService.FilterUsersAsync(gender, city, maritalStatus);
+            var users = new List<FilterVM>();
 
             var filterCBOVM = new FilterCBOVM
             {
-                Users = users,
+                
                 Genders = gendersCBO,
                 Cities = citiesCBO,
                 Maritals = maritalsCBO,
                 SelectedGender = gender,
                 SelectedCity = city,
-                SelectedMaritals = maritalStatus
+                SelectedMaritals = maritalStatus,
+                Users = users
             };
-          
+            if (!string.IsNullOrEmpty(gender) || !string.IsNullOrEmpty(city) || !string.IsNullOrEmpty(maritalStatus))
+            {
+                filterCBOVM.Users = await _neo4jService.FilterUsersAsync(gender, city, maritalStatus);
+            }
             foreach (var user in users)
             {
                 if (user.ID != null && user.ID.ToString() == userId)

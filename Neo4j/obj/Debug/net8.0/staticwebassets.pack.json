@@ -1133,6 +1133,10 @@
       "PackagePath": "staticwebassets\\assets\\images\\user\\4.jpg"
     },
     {
+      "Id": "D:\\Study\\nam4\\NoSQL\\SocialNetwork\\Neo4j\\wwwroot\\assets\\images\\user\\avatar 2.png",
+      "PackagePath": "staticwebassets\\assets\\images\\user\\avatar 2.png"
+    },
+    {
       "Id": "D:\\Study\\nam4\\NoSQL\\SocialNetwork\\Neo4j\\wwwroot\\assets\\images\\user\\avatar.jpg",
       "PackagePath": "staticwebassets\\assets\\images\\user\\avatar.jpg"
     },
