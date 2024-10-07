@@ -1,7 +1,7 @@
-﻿@model IEnumerable<Neo4j.ViewModels.SearchVM>
+﻿@model Neo4j.ViewModels.FilterCBOVM
 
 @{
-    ViewData["Title"] = "Search";
+    ViewData["Title"] = "Filter";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 
@@ -10,13 +10,53 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="card-body">
-                    <h2>Friends</h2>
+                    <h2>Filter Friends</h2>
+
+                    <form asp-action="Index" method="get">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="gender">Gender: </label>
+                                <select id="gender" name="gender" class="form-control">
+                                    <option value="">All</option>
+                                    @foreach (var gender in Model.Genders)
+                                    {
+                                        <option value="@gender" selected="@(gender == Model.SelectedGender ? "selected" : "")">@gender</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="city">City: </label>
+                                <select id="city" name="city" class="form-control">
+                                    <option value="">All</option>
+                                    @foreach (var city in Model.Cities)
+                                    {
+                                        <option value="@city" selected="@(city == Model.SelectedCity ? "selected" : "")">@city</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="maritalStatus">Marital Status: </label>
+                                <select id="maritalStatus" name="maritalStatus" class="form-control">
+                                    <option value="">All</option>
+                                    @foreach (var marital in Model.Maritals)
+                                    {
+                                        <option value="@marital" selected="@(marital == Model.SelectedMaritals ? "selected" : "")">@marital</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Apply Filters</button>
+                    </form>
+
+                    <h2 class="mt-4">Friends</h2>
                     <div class="friend-list-tab mt-2">
                         <div class="tab-content">
                             <div class="tab-pane fade active show" id="all-friends" role="tabpanel">
                                 <div class="card-body p-0">
                                     <div class="row">
-                                        @foreach(var user in Model)
+                                        @foreach (var user in Model.Users)
                                         {
                                             <div class="col-md-6 col-lg-6 mb-3">
                                                 <div class="iq-friendlist-block">
@@ -44,49 +84,61 @@
                                                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton01">
                                                                         @if (user.AreCloseFriends == false)
                                                                         {
-                                                                            <form method="post" asp-action="SetCloseFriend" asp-controller="Search">
+                                                                            <form method="post" asp-action="SetCloseFriend" asp-controller="Filter">
                                                                                 <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                                <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                                <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                                <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                                <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                                 <button type="submit" class="dropdown-item">Close Friend</button>
                                                                             </form>
                                                                         }
                                                                         else
                                                                         {
-                                                                            <form method="post" asp-action="RemoveCloseFriend" asp-controller="Search">
+                                                                            <form method="post" asp-action="RemoveCloseFriend" asp-controller="Filter">
                                                                                 <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                                <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                                <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                                <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                                <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                                 <button type="submit" class="dropdown-item">Remove Close Friend</button>
                                                                             </form>
                                                                         }
 
                                                                         @if (user.HasFollowed == true)
                                                                         {
-                                                                            <form method="post" asp-action="Unfollow" asp-controller="Search">
+                                                                            <form method="post" asp-action="Unfollow" asp-controller="Filter">
                                                                                 <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                                <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                                <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                                <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                                <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                                 <button type="submit" class="dropdown-item">Unfollow</button>
                                                                             </form>
                                                                         }
                                                                         else
                                                                         {
-                                                                            <form method="post" asp-action="Follow" asp-controller="Search">
+                                                                            <form method="post" asp-action="Follow" asp-controller="Filter">
                                                                                 <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                                <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                                <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                                <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                                <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                                 <button type="submit" class="dropdown-item">Follow</button>
                                                                             </form>
                                                                         }
 
-                                                                        <form method="post" asp-action="Unfriend" asp-controller="Search">
+                                                                        <form method="post" asp-action="Unfriend" asp-controller="Filter">
                                                                             <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                            <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                            <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                            <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                            <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                             <button type="submit" class="dropdown-item">Unfriend</button>
                                                                         </form>
 
                                                                         @if (user.Blocked == false)
                                                                         {
-                                                                            <form method="post" asp-action="Block" asp-controller="Search">
+                                                                            <form method="post" asp-action="Block" asp-controller="Filter">
                                                                                 <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                                <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                                <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                                <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                                <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                                 <button type="submit" class="dropdown-item">Block</button>
                                                                             </form>
                                                                         }
@@ -95,9 +147,11 @@
                                                             }
                                                             else if (user.FriendRequestSent == true)
                                                             {
-                                                                <form method="post" asp-action="CancelFriendRequest" asp-controller="Search">
+                                                                <form method="post" asp-action="CancelFriendRequest" asp-controller="Filter">
                                                                     <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                    <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                    <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                    <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                    <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                     <button type="submit" class="btn btn-warning me-2">Cancel Friend Request</button>
                                                                 </form>
                                                             }
@@ -108,14 +162,18 @@
                                                                         <i class="ri-check-line me-1 text-white"></i> Response
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                                        <form method="post" asp-action="AcceptFriendRequest" asp-controller="Search">
+                                                                        <form method="post" asp-action="AcceptFriendRequest" asp-controller="Filter">
                                                                             <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                            <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                            <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                            <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                            <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                             <button type="submit" class="dropdown-item">Accept</button>
                                                                         </form>
-                                                                        <form method="post" asp-action="RejectFriendRequest" asp-controller="Search">
+                                                                        <form method="post" asp-action="RejectFriendRequest" asp-controller="Filter">
                                                                             <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                            <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                            <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                            <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                            <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                             <button type="submit" class="dropdown-item">Reject</button>
                                                                         </form>
                                                                     </div>
@@ -128,14 +186,18 @@
                                                                         <i class="ri-check-line me-1 text-white"></i> More
                                                                     </button>
                                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                                        <form method="post" asp-action="AddFriend" asp-controller="Search">
+                                                                        <form method="post" asp-action="AddFriend" asp-controller="Filter">
                                                                             <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                            <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                            <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                            <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                            <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                             <button type="submit" class="dropdown-item">Add Friend</button>
                                                                         </form>
-                                                                        <form method="post" asp-action="Block" asp-controller="Search">
+                                                                        <form method="post" asp-action="Block" asp-controller="Filter">
                                                                             <input type="hidden" name="otherUserId" value="@user.ID" />
-                                                                            <input type="hidden" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" />
+                                                                            <input type="hidden" name="gender" value="@Model.SelectedGender" />
+                                                                            <input type="hidden" name="city" value="@Model.SelectedCity" />
+                                                                            <input type="hidden" name="maritalStatus" value="@Model.SelectedMaritals" />
                                                                             <button type="submit" class="dropdown-item">Block</button>
                                                                         </form>
                                                                     </div>
@@ -145,12 +207,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        }                  
+                                        }
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

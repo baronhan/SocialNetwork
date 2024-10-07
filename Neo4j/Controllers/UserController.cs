@@ -31,16 +31,22 @@ namespace Neo4j.Controllers
             ProfileVM user = null;
 
             var userId = HttpContext.Session.GetString("UserId");
+            var sessionId = HttpContext.Session.GetString("id"); 
 
             if (string.IsNullOrEmpty(userId))
             {
-                userId = HttpContext.Session.GetString("id");
+                userId = sessionId; 
             }
 
             if (!string.IsNullOrEmpty(userId))
             {
                 user = await _neo4jService.GetProfileByIdAsync(userId);
                 HttpContext.Session.Remove("UserId");
+
+                if (user != null)
+                {
+                    user.isYour = (user.ID == sessionId); 
+                }
             }
             else
             {
@@ -48,11 +54,7 @@ namespace Neo4j.Controllers
             }
 
             return View(user);
-
         }
-
-
-
 
         public IActionResult EditProfile()
         {
@@ -263,5 +265,78 @@ namespace Neo4j.Controllers
 
             return View("AccountSetting");
         }
+
+        //[HttpPost]
+        //public IActionResult UpdateFriendship(string otherUserId, string actionType)
+        //{
+
+        //    var userId = HttpContext.Session.GetString("UserId");
+
+        //    switch (actionType)
+        //    {
+        //        case "addFriend":
+        //            _neo4jService.AddFriendAsync(userId, otherUserId);
+        //            break;
+        //        case "unfriend":
+        //            _neo4jService.Unfriend_UnblockAsync(userId, otherUserId);
+        //            break;
+        //        case "follow":
+        //            _neo4jService.FollowAsync(userId, otherUserId);
+        //            break;
+        //        case "unfollow":
+        //            _neo4jService.UnfollowAsync(userId, otherUserId);
+        //            break;
+        //        case "closeFriend":
+        //            //_neo4jService.AddFriendAsync(userId, otherUserId);
+        //            break;
+        //        case "removeCloseFriend":
+        //            //_neo4jService.AddFriendAsync(userId, otherUserId);
+        //            break;
+        //        case "block":
+        //            _neo4jService.BlockAsync(userId, otherUserId);
+        //            break;
+        //        case "unblock":
+        //            _neo4jService.Unfriend_UnblockAsync(userId, otherUserId);
+        //            break;
+        //        case "cancelRequest":
+        //            _neo4jService.CancelFriendRequestAsync(userId, otherUserId);
+        //            break;
+        //        case "accept":
+        //            _neo4jService.AcceptFriendRequestAsync(userId, otherUserId);
+        //            break;
+        //        case "reject":
+        //            _neo4jService.RejectFriendRequestAsync(userId, otherUserId);
+        //            break;
+        //    }
+
+        //    return Json(new { success = true });
+        //}
+
+        //public IActionResult RefreshTab(string listType)
+        //{
+        //    var userId = HttpContext.Session.GetString("UserId");
+
+        //    switch (listType)
+        //    {
+        //        case "FriendList":
+        //            return ViewComponent("FriendListViewComponent", new { listType = "FriendList", userId = userId });
+        //        case "RecentlyFriendList":
+        //            return ViewComponent("FriendListViewComponent", new { listType = "RecentlyFriendList", userId = userId });
+        //        case "CloseFriendList":
+        //            return ViewComponent("FriendListViewComponent", new { listType = "CloseFriendList", userId = userId });
+        //        case "MutualHometownFriendList":
+        //            return ViewComponent("FriendListViewComponent", new { listType = "MutualHometownFriendList", userId = userId });
+        //        case "BlockedList":
+        //            return ViewComponent("FriendListViewComponent", new { listType = "BlockedList", userId = userId });
+        //        default:
+        //            return ViewComponent("FriendListViewComponent", new { listType = "FriendList", userId = userId });
+        //    }
+        //}
+
+        //public IActionResult LoadViewComponent()
+        //{
+        //    return ViewComponent("FriendListViewComponent");
+        //}
+
     }
 }

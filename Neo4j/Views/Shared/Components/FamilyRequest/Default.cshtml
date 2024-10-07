@@ -1,0 +1,83 @@
+﻿@model List<Neo4j.ViewModels.FamilyRequestVM>
+
+<li class="nav-item dropdown">
+    <a href="#" class="dropdown-toggle" id="group-drop" data-bs-toggle="dropdown"
+       aria-haspopup="true" aria-expanded="false"><i class="ri-notification-4-line"></i></a>
+    <div class="sub-drop sub-drop-large dropdown-menu" aria-labelledby="group-drop">
+        <div class="card shadow-none m-0">
+            <div class="card-header d-flex justify-content-between bg-primary">
+                <div class="header-title">
+                    <h5 class="mb-0 text-white">Request</h5>
+                </div>
+                @*   <small class="badge  bg-light text-dark ">$Model.RequestCount</small> *@
+            </div>
+
+
+            <div class="card-body p-0">
+                @foreach (var request in Model)
+                {
+
+                    <div class="iq-friend-request">
+                        <div class="iq-sub-card iq-sub-card-big d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <img class="avatar-40 rounded" src="@request.RequesterProfileImage"
+                                     alt="">
+                                <div class="ms-3">
+                                    <h6 class="mb-0 ">@request.RequesterName</h6>
+                                    <p class="mb-0">Wants to add you as @request.RequesterRelationship</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <a href="javascript:void(0);"
+                                   class="me-3 btn btn-primary rounded" onclick="confirmFamilyRequest('@request.RequesterId', '@request.RequesterName','@request.RequesterRelationship')">Confirm</a>
+                                <a href="javascript:void(0);"
+                                   class="me-3 btn btn-secondary rounded" onclick="deleteFamilyRequest('@request.RequesterId')">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="text-center">
+                    <a href="#" class=" btn text-primary">View More Request</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>
+
+<script>
+    function confirmFamilyRequest(requestId, requestname, requestRelationship) {
+        $.ajax({
+            url: '@Url.Action("ConfirmFamilyRequest", "Family")',
+            method: 'POST',
+            data: { requestId: requestId,
+                requestname: requestname,
+                requestRelationship: requestRelationship
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert('Request confirmed');
+                    location.reload();
+                } else {
+                    alert('Error confirming request');
+                }
+            }
+        });
+    }
+
+    function deleteFamilyRequest(requestId) {
+        $.ajax({
+            url: '@Url.Action("DeleteFamilyRequest", "Family")',
+            method: 'POST',
+            data: { requestId: requestId },
+            success: function (response) {
+                if (response.success) {
+                    alert('Request deleted');
+                    location.reload();
+                } else {
+                    alert('Error deleting request');
+                }
+            }
+        });
+    }
+</script>

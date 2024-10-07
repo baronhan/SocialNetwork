@@ -1,3 +1,29 @@
+MATCH 	(u1:User {email:'thanhngocbuiminh@gmail.com'}), 
+	(u2:User {email:'np@gmail.com'}), 
+	(u3:User {email:'dhn@gmail.com'}), 
+	(u4:User {email:'nha@gmail.com'}), 
+	(u5:User {email:'hp@gmail.com'}), 
+	(u6:User {email:'nva@gmail.com'}), 
+	(u7:User {email:'ttb@gmail.com'})
+CREATE 	(u1)-[:friend_with {since: date()}]->(u2),
+       	(u2)-[:friend_with {since: date()}]->(u1),
+	(u1)-[:friend_with {since: date()}]->(u3),
+       	(u3)-[:friend_with {since: date()}]->(u1),
+	(u1)-[:friend_with {since: date()}]->(u4),
+       	(u4)-[:friend_with {since: date()}]->(u1),
+	(u1)-[:friend_with {since: date()}]->(u5),
+       	(u5)-[:friend_with {since: date()}]->(u1),
+	(u1)-[:friend_with {since: date()}]->(u6),
+       	(u6)-[:friend_with {since: date()}]->(u1),
+	(u1)-[:friend_with {since: date()}]->(u7),
+       	(u7)-[:friend_with {since: date()}]->(u1)
+RETURN u1, u2, u3, u4, u5, u6, u7;
+
+----------------------------------
+MATCH (u:User {email: 'thanhngocbuiminh@gmail.com'})-[:friend_with]->(friends)-[:friend_with]->(f:User)
+RETURN friends.username, friends.email, COUNT(f) AS friends_num;
+
+
 // ----------------------------------
 // Tạo user
 // ----------------------------------

@@ -24,7 +24,7 @@
         public string? TwitterLink { get; set; }       
         public string? GoogleLink { get; set; }       
         public string? InstagramLink { get; set; }    
-        public string? YoutubeLink { get; set; }        
+        public string? YoutubeLink { get; set; }
 
         public UserModel() { }
 

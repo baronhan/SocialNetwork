@@ -5,11 +5,13 @@
 
 @{
     var userId = HttpContextAccessor.HttpContext?.Session.GetString("id");
-    UpdatePersonalInformationVM user = null; 
+    UpdatePersonalInformationVM user = null;
+    IEnumerable<SearchVM> friendRequests = null;
 
     if (!string.IsNullOrEmpty(userId))
     {
-        user = await _neo4jService.GetPersonalInformationByIdAsync(userId); 
+        user = await _neo4jService.GetPersonalInformationByIdAsync(userId);
+        friendRequests = await _neo4jService.GetFriendRequestsAsync(userId);
     }
 }
 
@@ -28,6 +30,30 @@
     <link rel="stylesheet" href="~/assets/vendor/vanillajs-datepicker/dist/css/datepicker.min.css">
     <link rel="stylesheet" href="~/assets/vendor/font-awesome-line-awesome/css/all.min.css">
     <link rel="stylesheet" href="~/assets/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+
+    <style>
+        i {
+            position: relative;
+        }
+
+        .number-display {
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.5em;
+            position: absolute;
+            top: 0;
+            transform: translate(50%, -50%);
+            border: 1px solid white;
+            font-weight: bold;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -324,9 +350,14 @@
                     <div class="iq-search-bar device-search">
                         <form action="/Search/Index" method="get" class="searchbox">
                             <a class="search-link" href="#"><i class="ri-search-line"></i></a>
-                            <input type="text" name="searchTerm" class="text search-input" placeholder="Search here...">
+                            <input type="text" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" class="text search-input" placeholder="Search here...">
                         </form>
                     </div>
+
+                    <a href="@Url.Action("Index", "Filter")" class="btn btn-soft-primary">
+                        <img src="../assets/images/small/08.png" alt="icon" class="img-fluid me-2">
+                    </a>
+
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-label="Toggle navigation">
@@ -339,90 +370,42 @@
                                     <i class="ri-home-line"></i>
                                 </a>
                             </li>
+
                             <li class="nav-item dropdown">
                                 <a href="#" class="dropdown-toggle" id="group-drop" data-bs-toggle="dropdown"
-                                   aria-haspopup="true" aria-expanded="false"><i class="ri-group-line"></i></a>
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <i class="ri-group-line">
+                                        <span class="number-display countDisplay">@friendRequests.Count()</span>
+                                    </i>
+                                </a>
                                 <div class="sub-drop sub-drop-large dropdown-menu" aria-labelledby="group-drop">
                                     <div class="card shadow-none m-0">
                                         <div class="card-header d-flex justify-content-between bg-primary">
                                             <div class="header-title">
                                                 <h5 class="mb-0 text-white">Friend Request</h5>
                                             </div>
-                                            <small class="badge  bg-light text-dark ">4</small>
+                                            <small class="badge  bg-light text-dark countDisplay">@friendRequests.Count()</small>
                                         </div>
                                         <div class="card-body p-0">
-                                            <div class="iq-friend-request">
-                                                <div class="iq-sub-card iq-sub-card-big d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/01.jpg"
-                                                             alt="">
-                                                        <div class="ms-3">
-                                                            <h6 class="mb-0 ">Jaques Amole</h6>
-                                                            <p class="mb-0">40 friends</p>
+                                            @foreach (var request in friendRequests)
+                                            {
+                                                <div class="iq-friend-request" id="friend-request-@request.ID">
+                                                    <div class="iq-sub-card iq-sub-card-big d-flex align-items-center justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <img class="avatar-40 rounded" src="@request.ProfileImage" alt="@request.Name">
+                                                            <div class="ms-3">
+                                                                <h6 class="mb-0 ">@request.Name</h6>
+                                                                <p class="mb-0">City: @request.City</p>
+                                                                <p class="mb-0">Followers: @request.FollowersCount</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center action-buttons">
+                                                            <a class="me-3 btn btn-primary rounded accept-request" data-id="@request.ID">Accept</a>
+                                                            <a class="me-3 btn btn-secondary rounded reject-request" data-id="@request.ID">Reject</a>
                                                         </div>
                                                     </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void();"
-                                                           class="me-3 btn btn-primary rounded">Confirm</a>
-                                                        <a href="javascript:void();"
-                                                           class="me-3 btn btn-secondary rounded">Delete Request</a>
-                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="iq-friend-request">
-                                                <div class="iq-sub-card iq-sub-card-big d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/02.jpg"
-                                                             alt="">
-                                                        <div class="ms-3">
-                                                            <h6 class="mb-0 ">Lucy Tania</h6>
-                                                            <p class="mb-0">12 friends</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void();"
-                                                           class="me-3 btn btn-primary rounded">Confirm</a>
-                                                        <a href="javascript:void();"
-                                                           class="me-3 btn btn-secondary rounded">Delete Request</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="iq-friend-request">
-                                                <div class="iq-sub-card iq-sub-card-big d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/03.jpg"
-                                                             alt="">
-                                                        <div class=" ms-3">
-                                                            <h6 class="mb-0 ">Manny Petty</h6>
-                                                            <p class="mb-0">3 friends</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void();"
-                                                           class="me-3 btn btn-primary rounded">Confirm</a>
-                                                        <a href="javascript:void();"
-                                                           class="me-3 btn btn-secondary rounded">Delete Request</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="iq-friend-request">
-                                                <div class="iq-sub-card iq-sub-card-big d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/04.jpg"
-                                                             alt="">
-                                                        <div class="ms-3">
-                                                            <h6 class="mb-0 ">Marsha Mello</h6>
-                                                            <p class="mb-0">15 friends</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <a href="javascript:void();"
-                                                           class="me-3 btn btn-primary rounded">Confirm</a>
-                                                        <a href="javascript:void();"
-                                                           class="me-3 btn btn-secondary rounded">Delete Request</a>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            }
                                             <div class="text-center">
                                                 <a href="#" class=" btn text-primary">View More Request</a>
                                             </div>
@@ -430,79 +413,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="search-toggle   dropdown-toggle" id="notification-drop" data-bs-toggle="dropdown">
-                                    <i class="ri-notification-4-line"></i>
-                                </a>
-                                <div class="sub-drop dropdown-menu" aria-labelledby="notification-drop">
-                                    <div class="card shadow-none m-0">
-                                        <div class="card-header d-flex justify-content-between bg-primary">
-                                            <div class="header-title bg-primary">
-                                                <h5 class="mb-0 text-white">All Notifications</h5>
-                                            </div>
-                                            <small class="badge  bg-light text-dark">4</small>
-                                        </div>
-                                        <div class="card-body p-0">
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/01.jpg" alt="">
-                                                    </div>
-                                                    <div class="ms-3 w-100">
-                                                        <h6 class="mb-0 ">Emma Watson Bni</h6>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-0">95 MB</p>
-                                                            <small class="float-right font-size-12">Just Now</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/02.jpg" alt="">
-                                                    </div>
-                                                    <div class="ms-3 w-100">
-                                                        <h6 class="mb-0 ">New customer is join</h6>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-0">Cyst Bni</p>
-                                                            <small class="float-right font-size-12">5 days ago</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/03.jpg" alt="">
-                                                    </div>
-                                                    <div class="ms-3 w-100">
-                                                        <h6 class="mb-0 ">Two customer is left</h6>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-0">Cyst Bni</p>
-                                                            <small class="float-right font-size-12">2 days ago</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/04.jpg" alt="">
-                                                    </div>
-                                                    <div class="w-100 ms-3">
-                                                        <h6 class="mb-0 ">New Mail from Fenny</h6>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-0">Cyst Bni</p>
-                                                            <small class="float-right font-size-12">3 days ago</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
+                            @await Component.InvokeAsync("FamilyRequest", new { userId = userId })
                             <li class="nav-item dropdown">
                                 <a href="#" class="dropdown-toggle" id="mail-drop" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="ri-mail-line"></i>
@@ -809,6 +720,28 @@
         <script src="../assets/js/app.js"></script>
         <script src="../vendor/vanillajs-datepicker/dist/js/datepicker.min.js"></script>
         <script src="../assets/js/lottie.js"></script>
+
+        <script>
+            $(document).ready(function(){
+                $(".accept-request").click(function() {
+                    var requestId = $(this).data("id");
+                    $.post("/Search/Accept", { otherUserId: requestId }, function(response) {
+                        if (response.success) {
+                            $("#friend-request-" + requestId + " .action-buttons").html("<span>You are now friends</span>");
+                        }
+                    });
+                });
+
+                $(".reject-request").click(function() {
+                    var requestId = $(this).data("id");
+                    $.post("/Search/Reject", { otherUserId: requestId }, function(response) {
+                        if (response.success) {
+                            $("#friend-request-" + requestId + " .action-buttons").html("<span>Friend request removed</span>");
+                        }
+                    });
+                });
+            });
+        </script>
 
         <div class="offcanvas offcanvas-bottom share-offcanvas" tabindex="-1" id="share-btn" aria-labelledby="shareBottomLabel">
             <div class="offcanvas-header">
