@@ -1,5 +1,9 @@
 {
   "Version": 1,
+<<<<<<< HEAD
+  "WorkspaceRootPath": "D:\\Personal\\HUIT_Baitap\\HK7\\NoSQL\\web\\SocialNetwork\\",
+  "Documents": [],
+=======
   "WorkspaceRootPath": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\",
   "Documents": [
     {
@@ -51,10 +55,14 @@
       "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\viewmodels\\searchvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
+>>>>>>> 8bb020b3c2a28ed2dfb5c5b59b93dfbb9065cded
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
+<<<<<<< HEAD
+      "DocumentGroups": []
+=======
       "DocumentGroups": [
         {
           "DockedWidth": 200,
@@ -220,6 +228,7 @@
           ]
         }
       ]
+>>>>>>> 8bb020b3c2a28ed2dfb5c5b59b93dfbb9065cded
     }
   ]
 }

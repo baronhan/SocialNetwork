@@ -6,6 +6,9 @@ using Neo4j.Driver;
 using Neo4j.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Neo4j.Models;
+using Microsoft.AspNetCore.Identity;
+using Neo4j.Services;
 
 namespace MyMVCApp.Services
 {
@@ -112,13 +115,13 @@ namespace MyMVCApp.Services
             }
         }
 
-        public async Task<IEnumerable<SearchVM>> SearchUsersAsync(string searchTerm)
+        public async Task<IEnumerable<SearchVM>> SearchUsersAsync(string searchTerm, string userId)
         {
             var users = new List<SearchVM>();
 
             var query = @"
-                            MATCH (u:User)
-                            WHERE u.username CONTAINS $searchTerm
+                            MATCH (u:User), (a:User {id: $userId})
+                            WHERE u.username CONTAINS $searchTerm AND NOT exists((a)-[:blocked]->(u))
                             OPTIONAL MATCH (u)<-[:follows|:friend_with]-(follower:User)
                             RETURN u AS user, COUNT(DISTINCT follower) AS followersCount, u.profileImage AS ProfileImage, u.id AS ID 
                         ";
@@ -127,7 +130,7 @@ namespace MyMVCApp.Services
             var session = _driver.AsyncSession();
             try
             {
-                var result = await session.RunAsync(query, new { searchTerm });
+                var result = await session.RunAsync(query, new { searchTerm, userId });
                 await result.ForEachAsync(record =>
                 {
                     var userNode = record["user"].As<INode>();
@@ -250,15 +253,12 @@ namespace MyMVCApp.Services
             }
         }
 
-        public async Task<string?> GetUserIdByEmailAsync(string email)
+        public async Task<string> GetUserIdByEmailAsync(string email)
         {
             var session = _driver.AsyncSession();
             try
             {
-                var result = await session.RunAsync(
-                    @"MATCH (u:User {email: $email})
-              RETURN u.id AS id",
-                    new { email });
+                var result = await session.RunAsync("MATCH (u:User {email: $email}) RETURN u.id AS id", new { email });
 
                 var records = await result.ToListAsync();
                 return records.Count > 0 ? records[0]["id"].As<string>() : null;
@@ -500,10 +500,8 @@ namespace MyMVCApp.Services
             MATCH (u:User {id: $id})
             RETURN u.username AS UserName,
                    u.email AS Email,
-                   u.language AS Languages
-
-            ";
-
+                   u.language AS Languages";
+            
             var session = _driver.AsyncSession();
             try
             {
@@ -525,7 +523,6 @@ namespace MyMVCApp.Services
             {
                 await session.CloseAsync();
             }
-
             return user;
         }
 
@@ -773,10 +770,11 @@ namespace MyMVCApp.Services
 
             var query = @"
                 MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                WHERE NOT exists((u)-[:blocked]->(friend))
                 OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
                 OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                 RETURN friend AS Friend, 
-                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
                        friend.profileImage AS ProfileImage, friend.id as ID 
             ";
 
@@ -796,7 +794,7 @@ namespace MyMVCApp.Services
 
                     var user = new SearchVM
                     {
-                        ID = _id?.ToString(),
+                        ID = _id.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -818,12 +816,13 @@ namespace MyMVCApp.Services
             return users;
         }
 
-        internal async Task<IEnumerable<SearchVM>?> RecentlyAddedFriendsByIdAsync(string id)
+        internal async Task<IEnumerable<SearchVM>> RecentlyAddedFriendsByIdAsync(string id)
         {
             var users = new List<SearchVM>();
 
             var query = @"
                             MATCH (u:User {id: $id})-[r:friend_with]->(friend:User)
+                            WHERE NOT exists((u)-[:blocked]->(friend))
                             OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
                             OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
                             WHERE duration.between(r.since, date()).days <= 7
@@ -832,8 +831,6 @@ namespace MyMVCApp.Services
                                    friend.profileImage AS ProfileImage, friend.id as ID 
                         ";
 
-
-
             var session = _driver.AsyncSession();
             try
             {
@@ -850,7 +847,7 @@ namespace MyMVCApp.Services
 
                     var user = new SearchVM
                     {
-                        ID = id?.ToString(),
+                        ID = id.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -872,21 +869,20 @@ namespace MyMVCApp.Services
             return users;
         }
 
-        internal async Task<IEnumerable<SearchVM>?> FriendsFromHometownByIdAsync(string id)
+        internal async Task<IEnumerable<SearchVM>> FriendsFromHometownByIdAsync(string id)
         {
             var users = new List<SearchVM>();
 
             var query = @"
                         MATCH (u:User {id: $id})-[:friend_with]->(friend:User)
+                        WHERE NOT exists((u)-[:blocked]->(friend))
                         OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
                         OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
-                        WHERE u.country = friend.country
+                        WHERE u.country IS NOT NULL AND u.country = friend.country
                         RETURN friend AS Friend, 
                                COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
                                friend.profileImage AS ProfileImage, friend.id as ID 
                     ";
-
-
 
             var session = _driver.AsyncSession();
             try
@@ -904,7 +900,7 @@ namespace MyMVCApp.Services
 
                     var user = new SearchVM
                     {
-                        ID = id?.ToString(),
+                        ID = id.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -926,21 +922,20 @@ namespace MyMVCApp.Services
             return users;
         }
 
-        internal async Task<IEnumerable<SearchVM>?> CloseFriendsByIdAsync(string id)
+        public async Task<IEnumerable<SearchVM>> CloseFriendsByIdAsync(string id)
         {
             var users = new List<SearchVM>();
 
             var query = @"
-                        MATCH (u:User {id: $id})-[:close_friend]->(friend:User)
-                        OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
-                        OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
-                        WHERE u.country = friend.country
-                        RETURN friend AS Friend, 
-                               COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                               friend.profileImage AS ProfileImage, friend.id as ID 
-                    ";
-
-
+                MATCH (u:User {id: $id})-[:close_friend]->(friend:User)
+                WHERE NOT exists((u)-[:blocked]->(friend))
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                WHERE (u)-[:close_friend]->(friend)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID 
+            ";
 
             var session = _driver.AsyncSession();
             try
@@ -958,7 +953,7 @@ namespace MyMVCApp.Services
 
                     var user = new SearchVM
                     {
-                        ID = id?.ToString(),
+                        ID = id.ToString(),
                         Name = username?.ToString(),
                         City = city?.ToString(),
                         FollowersCount = followersCount,
@@ -1024,12 +1019,598 @@ namespace MyMVCApp.Services
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
+            
+            return users;
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(string email)
+        {
+            var token = Guid.NewGuid().ToString();
+
+            var query = @"
+                        MATCH (u:User {email: $email})
+                        SET u.resetToken = $token, u.tokenCreatedAt = datetime()
+                        RETURN u";
+
+            using var session = _driver.AsyncSession();
+            await session.RunAsync(query, new { email = email, token });
+
+            return token;
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(string email, string token, string newPassword)
+        {
+            var validateTokenQuery = @"
+                        MATCH (u:User {email: $email})
+                        WHERE u.resetToken = $token AND u.tokenCreatedAt > datetime() - duration({hours: 24})
+                        RETURN u";
+
+            using var session = _driver.AsyncSession();
+
+            var validationResult = await session.RunAsync(validateTokenQuery, new { email, token });
+
+            var records = await validationResult.ToListAsync();
+            if (!records.Any())
+            {
+                return IdentityResult.Failed(new IdentityError { Description = "Token không hợp lệ hoặc đã hết hạn." });
+            }
+
+            UserService _userService = new UserService();
+            string hashedPassword = _userService.RegisterUser(newPassword);
+
+            var updatePasswordQuery = @"
+                        MATCH (u:User {email: $email})
+                        SET u.password = $hashedPassword, u.resetToken = NULL, u.tokenCreatedAt = NULL
+                        RETURN u";
+
+            await session.RunAsync(updatePasswordQuery, new { email, hashedPassword });
+
+            return IdentityResult.Success;
+        }
+
+        public async Task AddFriendAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId}), (b:User {id: $otherUserId})
+                CREATE (a)-[:friend_request {status: 'pending'}]->(b)
+                CREATE (a)-[:follows]->(b)";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool> IsFriendRequestPendingAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                        MATCH (u:User {id: $userId})-[r:friend_request]->(friend:User {id: $otherUserId})
+                        WHERE r.status = 'pending'
+                        RETURN r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                return await result.FetchAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task CancelFriendRequestAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})-[r]->(b:User {id: $otherUserId})
+                DELETE r";
+            
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task AcceptFriendRequestAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})<-[fr:friend_request]-(b:User {id: $otherUserId})
+                SET fr.status = 'accepted'
+                CREATE (a)-[:follows]->(b)
+                CREATE (a)-[:friend_with {since: date()}]->(b),
+                       (b)-[:friend_with {since: date()}]->(a)
+                DELETE fr";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task RejectFriendRequestAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})<-[r]-(b:User {id: $otherUserId})
+                DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task Unfriend_UnblockAsync(string userId, string friendId)
+        {
+            var query = @"
+                MATCH (u:User {id: $userId})-[r]-(friend:User {id: $friendId})
+                DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    var result = await tx.RunAsync(query, new { userId, friendId });
+                    await result.ConsumeAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task UnfollowAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (u:User {id: $userId})-[r:follows]->(friend:User {id: $otherUserId})
+                DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    var result = await tx.RunAsync(query, new { userId, otherUserId });
+                    await result.ConsumeAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task FollowAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId}), (b:User {id: $otherUserId})
+                WHERE NOT exists((a)-[:follows]->(b))
+                CREATE (a)-[:follows]->(b)";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    var result = await tx.RunAsync(query, new { userId, otherUserId });
+                    await result.ConsumeAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task BlockAsync(string userId, string friendId)
+        {
+            var query = @"
+                MATCH (u:User {id: $userId}),(friend:User {id: $friendId})
+                CREATE (u)-[:blocked]->(friend)
+                CREATE (friend)-[:is_blocked]->(u)";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.ExecuteWriteAsync(async tx =>
+                {
+                    var result = await tx.RunAsync(query, new { userId, friendId });
+                    await result.ConsumeAsync();
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<IEnumerable<SearchVM>> BlockedListByIdAsync(string id)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                MATCH (u:User {id: $id})-[:blocked]->(friend:User)
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                WHERE (u)-[:blocked]->(friend)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID 
+            ";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id });
+                await result.ForEachAsync(record =>
+                {
+                    var friendNode = record["Friend"].As<INode>();
+                    var followersCount = record["FollowersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    friendNode.Properties.TryGetValue("username", out var username);
+                    friendNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = id.ToString(),
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
             finally
             {
                 await session.CloseAsync();
             }
 
             return users;
+        }
+
+        public async Task<bool?> AreCloseFriendsAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:close_friend]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS areCloseFriends";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["areCloseFriends"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool?> HasFollowedAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:follows]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS hasFollowed";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["hasFollowed"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool?> HasBlockedAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:blocked]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS hasBlocked";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["hasBlocked"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool?> HasSentFriendRequestAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})-[:friend_request]->(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS sent";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["sent"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool?> HasReceivedFriendRequestAsync(string userId, string otherUserId)
+        {
+            if (userId == otherUserId)
+            {
+                return null;
+            }
+
+            var query = @"
+                        MATCH (u:User {id: $userId})<-[:friend_request]-(friend:User {id: $otherUserId})
+                        RETURN COUNT(friend) > 0 AS received";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                var record = await result.SingleAsync();
+                return record["received"].As<bool>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<SearchVM> GetFriendByIdAsync(string friendId)
+        {
+            var query = @"
+                MATCH (f:User)
+                WHERE f.id = $friendId
+                RETURN f.id AS ID, f.name AS Name, f.city AS City, f.followersCount AS FollowersCount, f.profileImage AS ProfileImage";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.ExecuteReadAsync(async tx =>
+                {
+                    var cursor = await tx.RunAsync(query, new { friendId });
+                    var record = await cursor.SingleAsync();
+
+                    return new SearchVM
+                    {
+                        ID = record["ID"].As<string>(),
+                        Name = record["Name"].As<string>(),
+                        City = record["City"].As<string>(),
+                        FollowersCount = record["FollowersCount"].As<int>(),
+                        ProfileImage = record["ProfileImage"].As<string>()
+                    };
+                });
+                return result;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<IEnumerable<SearchVM>> GetFriendRequestsAsync(string userId)
+        {
+            var users = new List<SearchVM>();
+
+            var query = @"
+                MATCH (u:User {id: $id})<-[:friend_request]-(friend:User)
+                OPTIONAL MATCH (friend)<-[:follows]-(follower:User)
+                OPTIONAL MATCH (friend)<-[:friend_with]-(friendOfFriend:User)
+                RETURN friend AS Friend, 
+                       COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
+                       friend.profileImage AS ProfileImage, u.id as ID
+                ";
+
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId });
+                await result.ForEachAsync(record =>
+                {
+                    var userNode = record["user"].As<INode>();
+                    var followersCount = record["followersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    userNode.Properties.TryGetValue("username", out var username);
+                    userNode.Properties.TryGetValue("city", out var city);
+
+                    var user = new SearchVM
+                    {
+                        ID = id.ToString(),
+                        Name = username?.ToString(),
+                        City = city?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+
+            return users;
+        }
+
+        public async Task CloseFriendAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})-[:friend_with]->(b:User {id: $otherUserId})
+                CREATE (a)-[:close_friend {since: date()}]->(b)";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task RemoveCloseFriendAsync(string userId, string otherUserId)
+        {
+            var query = @"
+                MATCH (a:User {id: $userId})-[r:close_friend]->(b:User {id: $otherUserId})
+                DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, otherUserId });
+                await result.ConsumeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
         }
     }
 }
