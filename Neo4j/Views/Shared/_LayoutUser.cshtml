@@ -353,6 +353,11 @@
                             <input type="text" name="searchTerm" value="@ViewData["CurrentSearchTerm"]" class="text search-input" placeholder="Search here...">
                         </form>
                     </div>
+
+                    <a href="@Url.Action("Index", "Filter")" class="btn btn-soft-primary">
+                        <img src="../assets/images/small/08.png" alt="icon" class="img-fluid me-2">
+                    </a>
+
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-label="Toggle navigation">
@@ -365,6 +370,7 @@
                                     <i class="ri-home-line"></i>
                                 </a>
                             </li>
+
                             <li class="nav-item dropdown">
                                 <a href="#" class="dropdown-toggle" id="group-drop" data-bs-toggle="dropdown"
                                    aria-haspopup="true" aria-expanded="false">
@@ -407,79 +413,7 @@
                                     </div>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a href="#" class="search-toggle   dropdown-toggle" id="notification-drop" data-bs-toggle="dropdown">
-                                    <i class="ri-notification-4-line"></i>
-                                </a>
-                                <div class="sub-drop dropdown-menu" aria-labelledby="notification-drop">
-                                    <div class="card shadow-none m-0">
-                                        <div class="card-header d-flex justify-content-between bg-primary">
-                                            <div class="header-title bg-primary">
-                                                <h5 class="mb-0 text-white">All Notifications</h5>
-                                            </div>
-                                            <small class="badge  bg-light text-dark">4</small>
-                                        </div>
-                                        <div class="card-body p-0">
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/01.jpg" alt="">
-                                                    </div>
-                                                    <div class="ms-3 w-100">
-                                                        <h6 class="mb-0 ">Emma Watson Bni</h6>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-0">95 MB</p>
-                                                            <small class="float-right font-size-12">Just Now</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/02.jpg" alt="">
-                                                    </div>
-                                                    <div class="ms-3 w-100">
-                                                        <h6 class="mb-0 ">New customer is join</h6>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-0">Cyst Bni</p>
-                                                            <small class="float-right font-size-12">5 days ago</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/03.jpg" alt="">
-                                                    </div>
-                                                    <div class="ms-3 w-100">
-                                                        <h6 class="mb-0 ">Two customer is left</h6>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-0">Cyst Bni</p>
-                                                            <small class="float-right font-size-12">2 days ago</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="#" class="iq-sub-card">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="">
-                                                        <img class="avatar-40 rounded" src="../assets/images/user/04.jpg" alt="">
-                                                    </div>
-                                                    <div class="w-100 ms-3">
-                                                        <h6 class="mb-0 ">New Mail from Fenny</h6>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <p class="mb-0">Cyst Bni</p>
-                                                            <small class="float-right font-size-12">3 days ago</small>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
+                            @await Component.InvokeAsync("FamilyRequest", new { userId = userId })
                             <li class="nav-item dropdown">
                                 <a href="#" class="dropdown-toggle" id="mail-drop" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="ri-mail-line"></i>

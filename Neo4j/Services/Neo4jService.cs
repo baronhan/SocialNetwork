@@ -1614,5 +1614,354 @@ namespace MyMVCApp.Services
                 await session.CloseAsync();
             }
         }
+
+        public async Task<List<UserModel>> GetUsersByUsernameAsync(string username)
+        {
+            var query = @"
+            MATCH (u:User)
+            WHERE u.username STARTS WITH $username
+            RETURN u.username AS Username, u.firstname AS Firstname, u.lastname AS Lastname, u.profileImage AS ProfileImage";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { username });
+                var users = new List<UserModel>();
+
+                await result.ForEachAsync(record =>
+                {
+                    users.Add(new UserModel
+                    {
+                        Username = record["Username"].As<string>(),
+                        Firstname = record["Firstname"].As<string>(),
+                        Lastname = record["Lastname"].As<string>(),
+                        ProfileImage = record["ProfileImage"].As<string>()
+                    });
+                });
+
+                return users;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool> AddFamilyMemberAsync(string userId, string familyUsername, string relationship)
+        {
+            var query = @"
+                       MATCH (u1:User {id: $userId}), (u2:User {username: $familyUsername})
+                       RETURN u2";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, familyUsername });
+                if (result != null)
+                {
+                    var createRelationshipQuery = @"
+                                          MATCH (u1:User {id: $userId}), (u2:User {username: $familyUsername})
+                                          MERGE (u1)<-[:IS_FAMILY {relationship: $relationship}]-(u2)";
+                    await session.RunAsync(createRelationshipQuery, new { userId, familyUsername, relationship });
+                    return true;
+                }
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<List<FamilyMemberVM>> GetFamilyMembersAsync(string userId)
+        {
+            var query = @"
+            MATCH (u1:User {id: $userId})-[r:IS_FAMILY]->(u2:User)
+            RETURN u2.firstname AS Firstname, u2.lastname AS Lastname, u2.profileImage AS ProfileImage, r.relationship AS Relationship";
+
+                var session = _driver.AsyncSession();
+                try
+                {
+                    var result = await session.RunAsync(query, new { userId });
+                    var familyMembers = new List<FamilyMemberVM>();
+
+                    await result.ForEachAsync(record =>
+                    {
+                        var familyMember = new FamilyMemberVM
+                        {
+                            User = new UserModel
+                            {
+                                Firstname = record["Firstname"].As<string>(),
+                                Lastname = record["Lastname"].As<string>(),
+                                ProfileImage = record["ProfileImage"].As<string>(),
+                            },
+                            Relation = record["Relationship"].As<string>()
+                        };
+                        familyMembers.Add(familyMember);
+                    });
+
+                    return familyMembers;
+                }
+                finally
+                {
+                    await session.CloseAsync();
+                }
+        }
+
+        public async Task<bool> AddFamilyRequestAsync(string userId, string familyUsername, string relationship)
+        {
+            var query = @"
+                MATCH (u1:User {id: $userId}), (u2:User {username: $familyUsername})
+                MERGE (u1)-[:FAMILY_REQUEST {relationship: $relationship, status: 'pending'}]->(u2)
+                RETURN u1, u2";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, familyUsername, relationship });
+                return result != null;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool> ConfirmFamilyRequestAsync(string requestId)
+        {
+            var query = @"
+                    MATCH (requester:User {id: $requestId})-[r:FAMILY_REQUEST]->(u:User)
+                    WHERE r.status = 'pending'
+                    SET r.status = 'confirmed'
+                    RETURN r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { requestId });
+                return result != null;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+
+        public async Task<bool> DeleteFamilyRequestAsync(string requestId)
+        {
+            var query = @"
+                    MATCH (u1:User {id: $requestId})-[r:FAMILY_REQUEST]->(u2:User)
+                    DELETE r
+                    RETURN COUNT(r) = 0";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { requestId });
+                return result != null;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<List<FamilyRequestVM>> GetFamilyRequestsAsync(string userId)
+        {
+            var query = @"
+            MATCH (u:User {id: $userId})<-[r:FAMILY_REQUEST]-(requester:User)
+            RETURN requester.id AS requesterId, requester.username AS requesterName, requester.profileImage AS requesterProfileImage, r.relationship AS requesterRelationship";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId });
+                var requests = new List<FamilyRequestVM>();
+
+                await result.ForEachAsync(record =>
+                {
+                    var familyRequest = new FamilyRequestVM
+                    {
+                        RequesterId = record["requesterId"].As<string>(),
+                        RequesterName = record["requesterName"].As<string>(),
+                        RequesterProfileImage = record["requesterProfileImage"].As<string>(),
+                        RequesterRelationship = record["requesterRelationship"].As<string>()
+                    };
+                    requests.Add(familyRequest);
+                });
+
+                return requests;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<IEnumerable<string>> GetGendersAsync()
+        {
+            var genders = new List<string>();
+
+            var query = @"
+                  MATCH (u:User)
+                  RETURN DISTINCT u.gender AS Gender";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query);
+                await result.ForEachAsync(record =>
+                {
+                    var gender = record["Gender"].As<string>();
+                    genders.Add(gender);
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return genders;
+        }
+
+        public async Task<IEnumerable<string>> GetCitiesAsync()
+        {
+            var cities = new List<string>();
+
+            var query = @"
+                  MATCH (u:User)
+                  RETURN DISTINCT u.city AS City";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query);
+                await result.ForEachAsync(record =>
+                {
+                    var city = record["City"].As<string>();
+                    cities.Add(city);
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return cities;
+        }
+
+        public async Task<IEnumerable<string>> GetMaritalStaAsync()
+        {
+            var maritals = new List<string>();
+
+            var query = @"
+                  MATCH (u:User)
+                  RETURN DISTINCT u.maritalStatus AS MaritalStatus";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query);
+                await result.ForEachAsync(record =>
+                {
+                    var marital = record["MaritalStatus"].As<string>();
+                    maritals.Add(marital);
+                });
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return maritals;
+        }
+
+        public async Task<IEnumerable<FilterVM>> FilterUsersAsync(string gender, string city, string maritalStatus, string userId)
+        {
+            var users = new List<FilterVM>();
+            var session = _driver.AsyncSession();
+            try
+            {
+                var query = "MATCH (u:User) ";
+
+                var conditions = new List<string>();
+
+                if (!string.IsNullOrEmpty(gender) && gender != "all")
+                {
+                    conditions.Add("u.gender = $gender");
+                }
+
+                if (!string.IsNullOrEmpty(city) && city != "all")
+                {
+                    conditions.Add("u.city = $city");
+                }
+
+                if (!string.IsNullOrEmpty(maritalStatus) && maritalStatus != "all")
+                {
+                    conditions.Add("u.maritalStatus = $maritalStatus");
+                }
+
+                conditions.Add($"NOT (u)<-[:blocked]-(:User {{id: $userId}})");
+
+                if (conditions.Count > 0)
+                {
+                    query += "WHERE " + string.Join(" AND ", conditions) + " ";
+                }
+
+                query += "OPTIONAL MATCH (u)<-[:follows|:friend_with]-(follower:User) ";
+                query += "RETURN u AS user, COUNT(DISTINCT follower) AS followersCount, u.profileImage AS ProfileImage, u.id AS ID";
+
+                Console.WriteLine($"Cypher Query: {query}");
+                Console.WriteLine($"Parameters: gender={gender}, city={city}, maritalStatus={maritalStatus}, userId={userId}");
+
+                var result = await session.RunAsync(query, new { gender, city, maritalStatus, userId });
+
+                await result.ForEachAsync(record =>
+                {
+                    var userNode = record["user"].As<INode>();
+                    var followersCount = record["followersCount"].As<int>();
+                    var profileImage = record["ProfileImage"].As<string>();
+                    var id = record["ID"].As<string>();
+
+                    userNode.Properties.TryGetValue("username", out var username);
+                    userNode.Properties.TryGetValue("city", out var cityProperty);
+                    userNode.Properties.TryGetValue("gender", out var genderProperty);
+                    userNode.Properties.TryGetValue("maritalStatus", out var maritalProperty);
+
+                    if (id == null)
+                    {
+                        return; 
+                    }
+
+                    var user = new FilterVM
+                    {
+                        ID = id,
+                        Name = username?.ToString(),
+                        City = cityProperty?.ToString(),
+                        Gender = genderProperty?.ToString(),
+                        MaritalStatus = maritalProperty?.ToString(),
+                        FollowersCount = followersCount,
+                        ProfileImage = profileImage
+                    };
+
+                    users.Add(user);
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+
+            return users;
+        }
+
+
+
+
     }
 }
