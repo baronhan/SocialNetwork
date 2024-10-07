@@ -1161,9 +1161,12 @@
                                         <li>
                                             <a class="nav-link" data-bs-toggle="pill" href="#pill-home" data-bs-target="#home-town">Home/Town</a>
                                         </li>
-                                        <li>
-                                            <a class="nav-link" data-bs-toggle="pill" href="#pill-blocked" data-bs-target="#blocked">Blocked</a>
-                                        </li>
+                                        @if (Model.isYour == true)
+                                        {
+                                            <li>
+                                                <a class="nav-link" data-bs-toggle="pill" href="#pill-blocked" data-bs-target="#blocked">Blocked</a>
+                                            </li>
+                                        }
                                     </ul>
                                     <div class="tab-content">
                                         <div class="tab-pane fade active show" id="all-friends" role="tabpanel">

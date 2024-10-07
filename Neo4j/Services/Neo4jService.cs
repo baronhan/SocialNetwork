@@ -1264,9 +1264,11 @@ namespace MyMVCApp.Services
         public async Task BlockAsync(string userId, string friendId)
         {
             var query = @"
-                MATCH (u:User {id: $userId}),(friend:User {id: $friendId})
-                CREATE (u)-[:blocked]->(friend)
-                CREATE (friend)-[:is_blocked]->(u)";
+                        MATCH (u:User {id: $userId}), (friend:User {id: $friendId})
+                        OPTIONAL MATCH (u)-[r]-(friend)
+                        DELETE r
+                        MERGE (u)-[:blocked]->(friend)
+                        MERGE (friend)-[:is_blocked]->(u)";
 
             var session = _driver.AsyncSession();
             try

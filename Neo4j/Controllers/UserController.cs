@@ -31,16 +31,22 @@ namespace Neo4j.Controllers
             ProfileVM user = null;
 
             var userId = HttpContext.Session.GetString("UserId");
+            var sessionId = HttpContext.Session.GetString("id"); 
 
             if (string.IsNullOrEmpty(userId))
             {
-                userId = HttpContext.Session.GetString("id");
+                userId = sessionId; 
             }
 
             if (!string.IsNullOrEmpty(userId))
             {
                 user = await _neo4jService.GetProfileByIdAsync(userId);
                 HttpContext.Session.Remove("UserId");
+
+                if (user != null)
+                {
+                    user.isYour = (user.ID == sessionId); 
+                }
             }
             else
             {
@@ -48,11 +54,7 @@ namespace Neo4j.Controllers
             }
 
             return View(user);
-
         }
-
-
-
 
         public IActionResult EditProfile()
         {
