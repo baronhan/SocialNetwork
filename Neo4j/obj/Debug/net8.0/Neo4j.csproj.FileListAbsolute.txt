@@ -227,3 +227,15 @@ D:\HKI 2024-2025\NoSQL\Neo4j\Neo4j\obj\Debug\net8.0\refint\Neo4j.dll
 D:\HKI 2024-2025\NoSQL\Neo4j\Neo4j\obj\Debug\net8.0\Neo4j.pdb
 D:\HKI 2024-2025\NoSQL\Neo4j\Neo4j\obj\Debug\net8.0\Neo4j.genruntimeconfig.cache
 D:\HKI 2024-2025\NoSQL\Neo4j\Neo4j\obj\Debug\net8.0\ref\Neo4j.dll
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.csproj.AssemblyReference.cache
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.GeneratedMSBuildEditorConfig.editorconfig
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.AssemblyInfoInputs.cache
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.AssemblyInfo.cs
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.csproj.CoreCompileInputs.cache
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.MvcApplicationPartsAssemblyInfo.cache
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.RazorAssemblyInfo.cache
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.RazorAssemblyInfo.cs
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.sourcelink.json
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.dll
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\refint\Neo4j.dll
+D:\Study\nam4\NoSQL\SocialNetwork\Neo4j\obj\Debug\net8.0\Neo4j.pdb
