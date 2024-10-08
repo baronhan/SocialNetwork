@@ -3,32 +3,28 @@
   "WorkspaceRootPath": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\filter\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\filter\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\controllers\\searchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\controllers\\searchcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\controllers\\filtercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\controllers\\filtercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\shared\\components\\familymember\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\shared\\components\\familymember\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\services\\neo4jservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\services\\neo4jservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\viewmodels\\filtervm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\viewmodels\\filtervm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\controllers\\familycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\controllers\\familycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\viewmodels\\searchvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\viewmodels\\searchvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\wwwroot\\app\\profile.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\wwwroot\\app\\profile.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\viewmodels\\filtercbovm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\viewmodels\\filtercbovm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\views\\shared\\components\\friendlist\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\views\\shared\\components\\friendlist\\default.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|d:\\hki 2024-2025\\nosql\\neo4j\\neo4j\\viewmodels\\familymembervm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D92076D5-3D1B-4DCD-AFFD-C3216D35BB9D}|Neo4j\\Neo4j.csproj|solutionrelative:neo4j\\viewmodels\\familymembervm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,93 +42,80 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Neo4jService.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
-              "RelativeDocumentMoniker": "Neo4j\\Services\\Neo4jService.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
-              "RelativeToolTip": "Neo4j\\Services\\Neo4jService.cs",
-              "ViewState": "AgIAAHYHAAAAAAAAAADwv14HAAAAAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "FamilyMemberVM.cs",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\FamilyMemberVM.cs",
+              "RelativeDocumentMoniker": "Neo4j\\ViewModels\\FamilyMemberVM.cs",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\FamilyMemberVM.cs",
+              "RelativeToolTip": "Neo4j\\ViewModels\\FamilyMemberVM.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-07T09:26:33.716Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FilterController.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\FilterController.cs",
-              "RelativeDocumentMoniker": "Neo4j\\Controllers\\FilterController.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\FilterController.cs",
-              "RelativeToolTip": "Neo4j\\Controllers\\FilterController.cs",
-              "ViewState": "AgIAAIkAAAAAAAAAAAAUwLAAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-07T09:19:57.831Z",
+              "WhenOpened": "2024-10-08T15:27:13.138Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "SearchController.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\SearchController.cs",
-              "RelativeDocumentMoniker": "Neo4j\\Controllers\\SearchController.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\SearchController.cs",
-              "RelativeToolTip": "Neo4j\\Controllers\\SearchController.cs",
-              "ViewState": "AgIAAH0AAAAAAAAAAAAUwIkAAAAtAAAAAAAAAA==",
+              "Title": "Neo4jService.cs",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
+              "RelativeDocumentMoniker": "Neo4j\\Services\\Neo4jService.cs",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Services\\Neo4jService.cs",
+              "RelativeToolTip": "Neo4j\\Services\\Neo4jService.cs",
+              "ViewState": "AgIAANYHAAAAAAAAAAAEwAgIAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-07T09:18:42.544Z",
+              "WhenOpened": "2024-10-08T15:17:00.006Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "SearchVM.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\SearchVM.cs",
-              "RelativeDocumentMoniker": "Neo4j\\ViewModels\\SearchVM.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\SearchVM.cs",
-              "RelativeToolTip": "Neo4j\\ViewModels\\SearchVM.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAmAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "FamilyController.cs",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\FamilyController.cs",
+              "RelativeDocumentMoniker": "Neo4j\\Controllers\\FamilyController.cs",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Controllers\\FamilyController.cs",
+              "RelativeToolTip": "Neo4j\\Controllers\\FamilyController.cs",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAAAIEAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-07T09:16:59.829Z",
+              "WhenOpened": "2024-10-08T15:15:20.431Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "FilterVM.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\FilterVM.cs",
-              "RelativeDocumentMoniker": "Neo4j\\ViewModels\\FilterVM.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\FilterVM.cs",
-              "RelativeToolTip": "Neo4j\\ViewModels\\FilterVM.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-07T09:16:53.189Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "FilterCBOVM.cs",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\FilterCBOVM.cs",
-              "RelativeDocumentMoniker": "Neo4j\\ViewModels\\FilterCBOVM.cs",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\ViewModels\\FilterCBOVM.cs",
-              "RelativeToolTip": "Neo4j\\ViewModels\\FilterCBOVM.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-07T09:16:43.677Z",
+              "DocumentIndex": 3,
+              "Title": "profile.html",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\wwwroot\\app\\profile.html",
+              "RelativeDocumentMoniker": "Neo4j\\wwwroot\\app\\profile.html",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\wwwroot\\app\\profile.html",
+              "RelativeToolTip": "Neo4j\\wwwroot\\app\\profile.html",
+              "ViewState": "AgIAANMDAAAAAAAAAAAmwE0EAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-10-08T14:58:32.034Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Filter\\Index.cshtml",
-              "RelativeDocumentMoniker": "Neo4j\\Views\\Filter\\Index.cshtml",
-              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Filter\\Index.cshtml",
-              "RelativeToolTip": "Neo4j\\Views\\Filter\\Index.cshtml",
-              "ViewState": "AgIAADgAAAAAAAAAAADwv0wAAABUAAAAAAAAAA==",
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\FamilyMember\\Default.cshtml",
+              "RelativeDocumentMoniker": "Neo4j\\Views\\Shared\\Components\\FamilyMember\\Default.cshtml",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\FamilyMember\\Default.cshtml",
+              "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\FamilyMember\\Default.cshtml",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAAAKcAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-10-07T09:07:11.036Z",
+              "WhenOpened": "2024-10-08T14:57:39.162Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Default.cshtml",
+              "DocumentMoniker": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\FriendList\\Default.cshtml",
+              "RelativeDocumentMoniker": "Neo4j\\Views\\Shared\\Components\\FriendList\\Default.cshtml",
+              "ToolTip": "D:\\HKI 2024-2025\\NoSQL\\Neo4j\\Neo4j\\Views\\Shared\\Components\\FriendList\\Default.cshtml",
+              "RelativeToolTip": "Neo4j\\Views\\Shared\\Components\\FriendList\\Default.cshtml",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-10-08T14:34:57.043Z",
               "EditorCaption": ""
             }
           ]
