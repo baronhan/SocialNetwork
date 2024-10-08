@@ -45,11 +45,28 @@ namespace Neo4j.Controllers
             }
 
             var updatedUser = await _neo4jService.GetFriendByIdAsync(id);
-            updatedUser.AreCloseFriends = await _neo4jService.AreCloseFriendsAsync(userId, id);
-            updatedUser.HasFollowed = await _neo4jService.HasFollowedAsync(userId, id);
-            updatedUser.Blocked = await _neo4jService.HasBlockedAsync(userId, id);
 
-            var buttonHtml = RenderButtonHtml(updatedUser); 
+            Console.WriteLine("Blocked: " + updatedUser.Blocked);
+            Console.WriteLine("AreCloseFriends: " + updatedUser.AreCloseFriends);
+            Console.WriteLine("HasFollowed: " + updatedUser.HasFollowed);
+
+            // Chỉ kiểm tra và cập nhật khi cần thiết
+            if (action == "closeFriend" || action == "removeCloseFriend")
+            {
+                updatedUser.AreCloseFriends = await _neo4jService.AreCloseFriendsAsync(userId, id);
+            }
+
+            if (action == "follow" || action == "unfollow")
+            {
+                updatedUser.HasFollowed = await _neo4jService.HasFollowedAsync(userId, id);
+            }
+
+            if (action == "block" || action == "unblock")
+            {
+                updatedUser.Blocked = await _neo4jService.HasBlockedAsync(userId, id);
+            }
+
+            var buttonHtml = RenderButtonHtml(updatedUser);
             return Json(new { updatedButtonHtml = buttonHtml });
         }
 

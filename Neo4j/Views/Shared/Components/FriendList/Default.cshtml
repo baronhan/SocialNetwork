@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<Neo4j.ViewModels.SearchVM>
 
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>
+
 <div class="card-body p-0">
     <div class="row">
         @foreach (var user in Model)
@@ -27,30 +32,29 @@
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton01">
                                         @if (user.AreCloseFriends == false)
                                         {
-                                            <button type="submit" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'closeFriend')">Close Friend</button>
+                                            <button type="button" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'closeFriend')">Close Friend</button>
                                         }
                                         else
                                         {
-                                            <button type="submit" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'removeCloseFriend')">Remove Close Friend</button>
+                                            <button type="button" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'removeCloseFriend')">Remove Close Friend</button>
                                         }
 
                                         @if (user.HasFollowed == true)
                                         {
-                                            <button type="submit" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'unfollow')">Unfollow</button>
+                                            <button type="button" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'unfollow')">Unfollow</button>
                                         }
                                         else
                                         {
-                                            <button type="submit" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'follow')">Follow</button>
+                                            <button type="button" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'follow')">Follow</button>
                                         }
 
-                                        <button type="submit" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'unfriend')">Unfriend</button>
-
-                                        <button type="submit" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'block')">Block</button>
+                                        <button type="button" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'unfriend')">Unfriend</button>
+                                        <button type="button" class="dropdown-item" onclick="updateFriendStatus('@user.ID', 'block')">Block</button>
                                     </div>
                                 }
                                 else
                                 {
-                                    <button onclick="updateFriendStatus(@user.ID, 'unblock')" class="dropdown-toggle btn btn-secondary me-2" id="friendButton_@user.ID" data-bs-toggle="dropdown" aria-expanded="true" type="button">
+                                    <button onclick="updateFriendStatus('@user.ID', 'unblock')" class="btn btn-secondary me-2" id="friendButton_@user.ID" type="button">
                                         <i class="ri-check-line me-1 text-white"></i> Unblock
                                     </button>
                                 }
@@ -65,36 +69,32 @@
 
 <script>
     function updateFriendStatus(userId, action) {
-        console.log("Button clicked for user ID:", userId, "Action:", action); 
+        console.log("Button clicked for user ID:", userId, "Action:", action);
+        console.log("User ID in function:", userId);
 
         $.ajax({
-            url: '/Friend/UpdateStatus', 
+            url: '/Friend/UpdateStatus',
             type: 'POST',
             data: {
                 id: userId,
                 action: action
             },
             success: function (response) {
-                console.log("Server Response:", response); 
-
-                alert("Response received: " + JSON.stringify(response)); 
+                console.log("Server Response:", response);
+                alert("Response received: " + JSON.stringify(response));
 
                 if (action === 'unfriend') {
                     $('#friendDropdown_' + userId).closest('.col-md-6').remove();
                 } else {
                     if (response && response.updatedButtonHtml) {
                         $('#friendButton_' + userId).html(response.updatedButtonHtml);
-                        $('#friendButton_' + userId).dropdown(); 
+                        $('#friendButton_' + userId).dropdown();
                     } else {
                         console.error("Unexpected response format:", response);
                     }
                 }
-                location.reload();
+                location.reload(); 
             },
         });
     }
 </script>
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>

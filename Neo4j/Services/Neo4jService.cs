@@ -1300,7 +1300,7 @@ namespace MyMVCApp.Services
                 WHERE (u)-[:blocked]->(friend)
                 RETURN friend AS Friend, 
                        COUNT(DISTINCT follower) + COUNT(DISTINCT friendOfFriend) AS FollowersCount,
-                       friend.profileImage AS ProfileImage, u.id as ID 
+                       friend.profileImage AS ProfileImage, friend.id as ID 
             ";
 
             var session = _driver.AsyncSession();
@@ -1677,7 +1677,7 @@ namespace MyMVCApp.Services
         {
             var query = @"
             MATCH (u1:User {id: $userId})-[r:IS_FAMILY]->(u2:User)
-            RETURN u2.firstname AS Firstname, u2.lastname AS Lastname, u2.profileImage AS ProfileImage, r.relationship AS Relationship";
+            RETURN u2.id as ID, u2.firstname AS Firstname, u2.lastname AS Lastname, u2.profileImage AS ProfileImage, r.relationship AS Relationship";
 
                 var session = _driver.AsyncSession();
                 try
@@ -1693,6 +1693,7 @@ namespace MyMVCApp.Services
                             {
                                 Firstname = record["Firstname"].As<string>(),
                                 Lastname = record["Lastname"].As<string>(),
+                                Id = record["ID"].As<string>(),
                                 ProfileImage = record["ProfileImage"].As<string>(),
                             },
                             Relation = record["Relationship"].As<string>()
@@ -1712,6 +1713,7 @@ namespace MyMVCApp.Services
         {
             var query = @"
                 MATCH (u1:User {id: $userId}), (u2:User {username: $familyUsername})
+                MATCH (u1:User {id: $userId})-[:friend_with]->(u2:User {username: $familyUsername})
                 MERGE (u1)-[:FAMILY_REQUEST {relationship: $relationship, status: 'pending'}]->(u2)
                 RETURN u1, u2";
 
@@ -1960,7 +1962,118 @@ namespace MyMVCApp.Services
             return users;
         }
 
+        public async Task<List<UserModel>> GetUsersByUsernameOnlyFriendAsync(string username, string currentUserId)
+        {
+            var query = @"
+            MATCH (u:User {id: $currentUserId})-[:friend_with]->(friend:User)
+            WHERE friend.username STARTS WITH $username AND friend.id <>  $currentUserId
+            RETURN friend.username AS Username, friend.firstname AS Firstname, friend.lastname AS Lastname, friend.profileImage AS ProfileImage";
 
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { username, currentUserId });
+                var users = new List<UserModel>();
+
+                await result.ForEachAsync(record =>
+                {
+                    users.Add(new UserModel
+                    {
+                        Username = record["Username"].As<string>(),
+                        Firstname = record["Firstname"].As<string>(),
+                        Lastname = record["Lastname"].As<string>(),
+                        ProfileImage = record["ProfileImage"].As<string>()
+                    });
+                });
+
+                return users;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        public async Task<bool> CheckFamilyRequestIsFriend(string userId, string familyUsername)
+        {
+            var query = @"
+            MATCH (u1:User {id: $userId})-[r:friend_with]-(u2:User {username: $familyUsername})
+            RETURN r";
+
+                var session = _driver.AsyncSession();
+                try
+                {
+                    var result = await session.RunAsync(query, new { userId, familyUsername });
+
+                    return await result.FetchAsync();
+                }
+                finally
+                {
+                    await session.CloseAsync();
+                }
+        }
+        public async Task<bool> CheckFamilyRequest(string userId, string familyUsername)
+        {
+            var query = @"
+            MATCH (u1:User {id: $userId})-[r:FAMILY_REQUEST]->(u2:User {username: $familyUsername})
+            RETURN r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, familyUsername });
+                return await result.FetchAsync();
+
+
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+
+        internal async Task<bool> UpdateFamilyMemberAsync(string id, string relationship, string currentUserId)
+        {
+            var query = @"
+            MATCH (u:User {id: $currentUserId})-[r:IS_FAMILY]->(f:User {id: $id})
+            SET r.relationship = $relationship
+            RETURN r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { id, relationship, currentUserId });
+
+                return await result.FetchAsync(); 
+            }
+            finally
+            {
+                await session.CloseAsync(); 
+            }
+        }
+
+        internal async Task<bool> DeleteFamilyMemberAsync(string friendId, string currentUserId)
+        {
+            var query = @"
+            MATCH (u:User {id: $currentUserId})-[r:IS_FAMILY]->(f:User {id: $friendId})
+            DELETE r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                await session.RunAsync(query, new { currentUserId, friendId });
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
 
 
     }
