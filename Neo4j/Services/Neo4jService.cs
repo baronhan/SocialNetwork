@@ -1614,18 +1614,48 @@ namespace MyMVCApp.Services
                 await session.CloseAsync();
             }
         }
-
         public async Task<List<UserModel>> GetUsersByUsernameAsync(string username)
         {
             var query = @"
-            MATCH (u:User)
-            WHERE u.username STARTS WITH $username
-            RETURN u.username AS Username, u.firstname AS Firstname, u.lastname AS Lastname, u.profileImage AS ProfileImage";
+           MATCH (u:User)
+           WHERE u.username STARTS WITH $username
+           RETURN u.username AS Username, u.firstname AS Firstname, u.lastname AS Lastname, u.profileImage AS ProfileImage";
 
             var session = _driver.AsyncSession();
             try
             {
                 var result = await session.RunAsync(query, new { username });
+                var users = new List<UserModel>();
+
+                await result.ForEachAsync(record =>
+                {
+                    users.Add(new UserModel
+                    {
+                        Username = record["Username"].As<string>(),
+                        Firstname = record["Firstname"].As<string>(),
+                        Lastname = record["Lastname"].As<string>(),
+                        ProfileImage = record["ProfileImage"].As<string>()
+                    });
+                });
+
+                return users;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+        public async Task<List<UserModel>> GetUsersByUsernameOnlyFriendAsync(string username, string currentUserId)
+        {
+            var query = @"
+            MATCH (u:User {id: $currentUserId})-[:friend_with]->(friend:User)
+            WHERE friend.username STARTS WITH $username AND friend.id <>  $currentUserId
+            RETURN friend.username AS Username, friend.firstname AS Firstname, friend.lastname AS Lastname, friend.profileImage AS ProfileImage";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { username, currentUserId });
                 var users = new List<UserModel>();
 
                 await result.ForEachAsync(record =>
@@ -1709,9 +1739,9 @@ namespace MyMVCApp.Services
         }
 
         public async Task<bool> AddFamilyRequestAsync(string userId, string familyUsername, string relationship)
-        {
+        { 
             var query = @"
-                MATCH (u1:User {id: $userId}), (u2:User {username: $familyUsername})
+                MATCH (u1:User {id: $userId})-[:friend_with]->(u2:User {username: $familyUsername})
                 MERGE (u1)-[:FAMILY_REQUEST {relationship: $relationship, status: 'pending'}]->(u2)
                 RETURN u1, u2";
 
@@ -1719,7 +1749,46 @@ namespace MyMVCApp.Services
             try
             {
                 var result = await session.RunAsync(query, new { userId, familyUsername, relationship });
+            
+                
                 return result != null;
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+        public async Task<bool> CheckFamilyRequestIsFriend(string userId, string familyUsername)
+        {
+            var query = @"
+        MATCH (u1:User {id: $userId})-[r:friend_with]-(u2:User {username: $familyUsername})
+        RETURN r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, familyUsername });
+
+                return await result.FetchAsync();
+            }
+            finally
+            {
+                await session.CloseAsync();
+            }
+        }
+        public async Task<bool> CheckFamilyRequest(string userId, string familyUsername)
+        {
+            var query = @"
+        MATCH (u1:User {id: $userId})-[r:FAMILY_REQUEST]->(u2:User {username: $familyUsername})
+        RETURN r";
+
+            var session = _driver.AsyncSession();
+            try
+            {
+                var result = await session.RunAsync(query, new { userId, familyUsername });
+                return await result.FetchAsync();
+                   
+               
             }
             finally
             {
@@ -1883,6 +1952,7 @@ namespace MyMVCApp.Services
             var session = _driver.AsyncSession();
             try
             {
+
                 var query = "MATCH (u:User) ";
 
                 var conditions = new List<string>();
